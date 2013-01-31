@@ -1,0 +1,17 @@
+# cat=basic/enable; type=boolean; label=Enable YubiKey authentication for TYPO3 backend users
+yubikeyEnableBE = 1
+
+# cat=basic/enable; type=boolean; label=Enable YubiKey authentication for TYPO3 frontent users
+yubikeyEnableFE = 0
+
+# cat=basic; type=string; label=Yubico Client ID: Get a Client ID and Client Key at https://upgrade.yubico.com/getapikey/
+yubikeyClientId = 
+
+# cat=basic; type=string; label=Yubico Client Key: 
+yubikeyClientKey = 
+
+# cat=basic/enable; type=boolean; label=Use SSL for authentication: Uses SSL to communicate with the authentication servers. If not cheked, HTTP will be used.
+yubikeyUseSSL = 0
+
+# cat=basic/enable; type=boolean; label=Devlog: Write Debug Information to devlog
+devlog = 0

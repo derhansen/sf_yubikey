@@ -1,0 +1,32 @@
+.yubikey {
+    padding-left: 20px;
+}
+
+body#typo3-index-php .t3-login-yubikey {
+    height: 21px;
+    padding: 0;
+    margin: 5px 0 0;
+    line-height: 21px;
+    position: relative;
+}
+
+
+body#typo3-index-php .t3-login-yubikey label {
+    float: left;
+    padding-right: 10px;
+    width: 90px;
+}
+
+body#typo3-index-php .t3-login-yubikey input {
+	color: #000;
+	height: 19px;
+	line-height: 19px;
+	font-size: 11px;
+	width: 153px;
+	margin: 0;
+	padding: 2px 23px 0 20px;
+	border: 1px solid #7c7c7c;
+	background: #ffffff url('yubi_16x16.gif') no-repeat;
+	background-position: 2px 3px;
+	-webkit-appearance: textfield;
+}
