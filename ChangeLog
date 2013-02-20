@@ -1,3 +1,8 @@
+20.02.2013 Torben Hansen <derhansen@gmail.com>
+* TYPO3 6.0 login template #2
+* Documentation update #3
+* CGL Code cleanup #1
+
 2012-07-07 Torben Hansen <derhansen@gmail.com>
 * Added possibility to enable/disable the service for FE- and BE-Authentication
 * Updated documentation 

@@ -23,15 +23,7 @@
  ***************************************************************/
 
 /**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- *
- *   53: class tx_sfyubikey_sv1 extends t3lib_svbase
- *   65:     public function initAuth($subType, array $loginData, array $authenticationInformation, t3lib_userAuth $parentObject)
- *   76:     function getUser()
- *  109:     function authUser($user)
- *  183:     function writeDevLog($message)
- *
+ * Yubikey OTP Authentication Service
  */
 
 require_once 'Auth/Yubico.php';
@@ -47,138 +39,138 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 	/**
 	 * Keeps class name.
 	 *
-	 * @var	string
+	 * @var    string
 	 */
-        public $prefixId = 'tx_sfyubikey_sv1';
+	public $prefixId = 'tx_sfyubikey_sv1';
 
 	/**
 	 * Keeps path to this script relative to the extension directory.
 	 *
-	 * @var	string
+	 * @var    string
 	 */
-        public $scriptRelPath = 'sv1/class.tx_sfyubikey_sv1.php'; // Path to this script relative to the extension dir.
-    
+	public $scriptRelPath = 'sv1/class.tx_sfyubikey_sv1.php';
+
 	/**
 	 * Keeps extension key.
 	 *
-	 * @var	string
+	 * @var    string
 	 */
-        public $extKey = 'sf_yubikey'; // The extension key.
+	public $extKey = 'sf_yubikey';
 
 	/**
 	 * Keeps extension configuration.
 	 *
-	 * @var	mixed
+	 * @var    mixed
 	 */
-        protected $extConf;
-        
+	protected $extConf;
+
 	/**
-	 * Checks if service is available. 
+	 * Checks if service is available.
 	 *
-	 * @return	boolean		TRUE if service is available
+	 * @return    boolean        TRUE if service is available
 	 */
-	public function init() {
-            $available = FALSE;
-            $this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_yubikey']);
-            
-            if (isset($this->extConf['yubikeyEnableBE']) && (bool)$this->extConf['yubikeyEnableBE'] && TYPO3_MODE == 'BE') {
-                    $available = TRUE;
-            } elseif (isset($this->extConf['yubikeyEnableFE']) && (bool)$this->extConf['yubikeyEnableFE'] && TYPO3_MODE == 'FE') {
-                    $available = TRUE;
-            }
+	public function init () {
+		$available = FALSE;
+		$this->extConf = unserialize ($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_yubikey']);
 
-            return $available;
-	}        
+		if (isset($this->extConf['yubikeyEnableBE']) && (bool)$this->extConf['yubikeyEnableBE'] && TYPO3_MODE == 'BE') {
+			$available = TRUE;
+		} elseif (isset($this->extConf['yubikeyEnableFE']) && (bool)$this->extConf['yubikeyEnableFE'] && TYPO3_MODE == 'FE') {
+			$available = TRUE;
+		}
 
-        /**
-         * Authenticates the user by using Yubikey
-         * 
-         * Will return one of following authentication status codes:
-         *  - 0 - authentication failure
-         *  - 100 - just go on. User is not authenticated but there is still no reason to stop
-         *  - 200 - the service was able to authenticate the user
-         * 
-         * @param array $user Array containing the usersata
-         * @return int authentication statuscode, one of 0,100 and 200
-         */
-        function authUser(array $user) {
-            $ret = 0; // 0 means authentication failure
+		return $available;
+	}
 
-            // Check if user Yubikey-Authentication is enabled for this user
-            if (!$user['tx_sfyubikey_yubikey_enable']) {
-                $this->writeDevLog(TYPO3_MODE .' login using TYPO3 password authentication for user: ' . $user['username']);
-                $ret = 100; // Continue with TYPO3 authentication
-            } else {
-                $this->writeDevLog(TYPO3_MODE .' login using Yubikey authentication for user: ' . $user['username']);
+	/**
+	 * Authenticates the user by using Yubikey
+	 *
+	 * Will return one of following authentication status codes:
+	 *  - 0 - authentication failure
+	 *  - 100 - just go on. User is not authenticated but there is still no reason to stop
+	 *  - 200 - the service was able to authenticate the user
+	 *
+	 * @param array $user Array containing the usersata
+	 * @return int authentication statuscode, one of 0,100 and 200
+	 */
+	function authUser (array $user) {
+		$ret = 0; // 0 means authentication failure
 
-                // Get Yubikey OTP
-                $yubikeyOTP = t3lib_div::_GP('t3-yubikey');
-                $this->writeDevLog('Yubikey: ' . $yubikeyOTP);
+		// Check if user Yubikey-Authentication is enabled for this user
+		if (!$user['tx_sfyubikey_yubikey_enable']) {
+			$this->writeDevLog (TYPO3_MODE . ' login using TYPO3 password authentication for user: ' . $user['username']);
+			$ret = 100; // Continue with TYPO3 authentication
+		} else {
+			$this->writeDevLog (TYPO3_MODE . ' login using Yubikey authentication for user: ' . $user['username']);
 
-                // Check, if Yubikey-ID does match with users Yubikey-ID
-                if ($user['tx_sfyubikey_yubikey_id'] == substr($yubikeyOTP, 0, 12)) {
-                    $clientId = $this->extConf['yubikeyClientId'];
-                    $clientKey = $this->extConf['yubikeyClientKey'];
-                    $useSSL = $this->extConf['yubikeyUseHTTPS'] ? $this->extConf['yubikeyUseHTTPS'] : 0;
+			// Get Yubikey OTP
+			$yubikeyOTP = t3lib_div::_GP ('t3-yubikey');
+			$this->writeDevLog ('Yubikey: ' . $yubikeyOTP);
 
-                    $this->writeDevLog('Yubikey config - ClientId: ' . $clientId);
+			// Check, if Yubikey-ID does match with users Yubikey-ID
+			if ($user['tx_sfyubikey_yubikey_id'] == substr ($yubikeyOTP, 0, 12)) {
+				$clientId = $this->extConf['yubikeyClientId'];
+				$clientKey = $this->extConf['yubikeyClientKey'];
+				$useSSL = $this->extConf['yubikeyUseHTTPS'] ? $this->extConf['yubikeyUseHTTPS'] : 0;
 
-                    // Initialize Yubikey Login
-                    $yubi = new Auth_Yubico((int) $clientId, $clientKey, $useSSL);
-                    $auth = $yubi->verify($yubikeyOTP);
+				$this->writeDevLog ('Yubikey config - ClientId: ' . $clientId);
 
-                    if (PEAR::isError($auth)) {
-                        $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
-                        $this->writelog(255, 3, 3, 1,
-                                $errorMessage,
-                                array(
-                                        $this->authInfo['REMOTE_ADDR'],
-                                        $this->authInfo['REMOTE_HOST'],
-                                        $this->login['uname']
-                                )
-                        );                        
-                        $ret = 0;
-                    } else {
-                        // Continue to other auth-service(s)
-                        $ret = 100;
-                    }
+				// Initialize Yubikey Login
+				$yubi = new Auth_Yubico((int)$clientId, $clientKey, $useSSL);
+				$auth = $yubi->verify ($yubikeyOTP);
 
-                    $this->writeDevLog('Yubico Response:' . $yubi->getLastResponse());
-                } else {
-                    if ($yubikeyOTP != '') {
-                        // Wrong Yubikey ID - Authentication failure
-                        $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', wrong Yubikey ID!';
-                        $ret = 0;
-                    } else {
-                        // Yubikey missing
-                        $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey needed, but empty Yubikey supplied!';
-                        $ret = 0;
-                    }
-                    $this->writelog(255, 3, 3, 1,
-                            $errorMessage,
-                            array(
-                                    $this->authInfo['REMOTE_ADDR'],
-                                    $this->authInfo['REMOTE_HOST'],
-                                    $this->login['uname']
-                            )
-                    );                        
-                }
-            }
+				if (PEAR::isError ($auth)) {
+					$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
+					$this->writelog (255, 3, 3, 1,
+						$errorMessage,
+						array(
+							$this->authInfo['REMOTE_ADDR'],
+							$this->authInfo['REMOTE_HOST'],
+							$this->login['uname']
+						)
+					);
+					$ret = 0;
+				} else {
+					// Continue to other auth-service(s)
+					$ret = 100;
+				}
 
-            return $ret;
-        }
+				$this->writeDevLog ('Yubico Response:' . $yubi->getLastResponse ());
+			} else {
+				if ($yubikeyOTP != '') {
+					// Wrong Yubikey ID - Authentication failure
+					$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', wrong Yubikey ID!';
+					$ret = 0;
+				} else {
+					// Yubikey missing
+					$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey needed, but empty Yubikey supplied!';
+					$ret = 0;
+				}
+				$this->writelog (255, 3, 3, 1,
+					$errorMessage,
+					array(
+						$this->authInfo['REMOTE_ADDR'],
+						$this->authInfo['REMOTE_HOST'],
+						$this->login['uname']
+					)
+				);
+			}
+		}
 
-        /**
-        * Writes to devlog if enabled
-        * 
-        * @param string $message Message for devlog
-        * @return viod
-        */
-        function writeDevLog($message) {
-            if ($this->extConf['devlog']) {
-                t3lib_div::devLog($message, 'tx_sfyubikey_sv1', 0);
-            }
-        }
+		return $ret;
+	}
+
+	/**
+	 * Writes to devlog if enabled
+	 *
+	 * @param string $message Message for devlog
+	 * @return void
+	 */
+	function writeDevLog ($message) {
+		if ($this->extConf['devlog']) {
+			t3lib_div::devLog ($message, 'tx_sfyubikey_sv1', 0);
+		}
+	}
 
 }
 
