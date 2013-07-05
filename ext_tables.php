@@ -29,12 +29,16 @@ $version = explode('.', TYPO3_version);
 if ($version[0] < 6) {
 	$template = 'typo3conf/ext/sf_yubikey/res/login-v4.html';
 } else {
+    if ($version[1] < 2) {
+        $tmplPath = 'templates/login.html';
+    } else {
+        $tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+    }
 	$template = 'typo3conf/ext/sf_yubikey/res/login-v6.html';
 }
 
 if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
-
-    $TBE_STYLES['htmlTemplates']['templates/login.html'] = PATH_site . $template;
+    $TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
     $TBE_STYLES['stylesheet2'] = '../typo3conf/ext/sf_yubikey/res/sf_yubikey.css';
 }
 

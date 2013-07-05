@@ -29,10 +29,10 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'author_company' => 'Skyfillers GmbH',
-	'version' => '0.5.0',
+	'version' => '0.6.0',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.0-0.0.0',
+			'typo3' => '4.5.0-6.2.99',
 		),
 		'conflicts' => array(
 		),
