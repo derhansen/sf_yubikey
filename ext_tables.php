@@ -6,19 +6,19 @@ if (!defined ('TYPO3_MODE')) {
 $extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
 
 $tempColumns = array (
-	'tx_sfyubikey_yubikey_enable' => array (		
-		'exclude' => 0,		
-		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xml:users.tx_sfyubikey_yubikey_enable',		
+	'tx_sfyubikey_yubikey_enable' => array (
+		'exclude' => 0,
+		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xml:users.tx_sfyubikey_yubikey_enable',
 		'config' => array (
 			'type' => 'check',
 		)
 	),
-	'tx_sfyubikey_yubikey_id' => array (		
-		'exclude' => 0,		
-		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xml:users.tx_sfyubikey_yubikey_id',		
+	'tx_sfyubikey_yubikey_id' => array (
+		'exclude' => 0,
+		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xml:users.tx_sfyubikey_yubikey_id',
 		'config' => array (
-			'type' => 'input',	
-			'size' => '12',	
+			'type' => 'input',
+			'size' => '12',
 			'max' => '12',
 		)
 	),
@@ -26,20 +26,21 @@ $tempColumns = array (
 
 /* Set login template based on TYPO3 version */
 $version = explode('.', TYPO3_version);
-if ($version[0] < 6) {
-	$template = 'typo3conf/ext/sf_yubikey/res/login-v4.html';
-} else {
-    if ($version[1] < 2) {
-        $tmplPath = 'templates/login.html';
-    } else {
-        $tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
-    }
-	$template = 'typo3conf/ext/sf_yubikey/res/login-v6.html';
+$tmplPath = 'templates/login.html';
+$template = 'typo3conf/ext/sf_yubikey/res/login-v4.html';
+
+if ($version[0] >= 6) {
+	if ($version[1] >= 2) {
+		$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+		$template = 'typo3conf/ext/sf_yubikey/res/login-v6-2.html';
+	} else {
+		$template = 'typo3conf/ext/sf_yubikey/res/login-v6.html';
+	}
 }
 
 if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
-    $TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
-    $TBE_STYLES['stylesheet2'] = '../typo3conf/ext/sf_yubikey/res/sf_yubikey.css';
+	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
+	$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/sf_yubikey/res/sf_yubikey.css';
 }
 
 t3lib_div::loadTCA('be_users');
