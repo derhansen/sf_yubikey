@@ -1,7 +1,7 @@
-# cat=basic/enable; type=boolean; label=Enable YubiKey authentication for TYPO3 backend users
+# cat=basic/enable; type=boolean; label=YubiKey auth. for backend users
 yubikeyEnableBE = 1
 
-# cat=basic/enable; type=boolean; label=Enable YubiKey authentication for TYPO3 frontent users
+# cat=basic/enable; type=boolean; label=YubiKey auth. for frontend users
 yubikeyEnableFE = 0
 
 # cat=basic; type=string; label=Yubico Client ID: Get a Client ID and Client Key at https://upgrade.yubico.com/getapikey/
