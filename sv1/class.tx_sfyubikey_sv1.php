@@ -26,7 +26,13 @@
  * Yubikey OTP Authentication Service
  */
 
-require_once 'Auth/Yubico.php';
+$yubicoPear = stream_resolve_include_path('Auth/Yubico.php');
+if ($yubicoPear !== FALSE) {
+	require_once 'Auth/Yubico.php';
+} else {
+	require_once(t3lib_extMgm::extPath('sf_yubikey', 'lib/php-yubico/Yubico.php'));
+}
+
 
 /**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
