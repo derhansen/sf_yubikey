@@ -33,7 +33,6 @@ if ($yubicoPear !== FALSE) {
 	require_once(t3lib_extMgm::extPath('sf_yubikey', 'lib/php-yubico/Yubico.php'));
 }
 
-
 /**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
  *
