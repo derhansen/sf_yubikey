@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Torben Hansen <derhansen@gmail.com>
+ *  (c) 2012 - 2014 Torben Hansen <derhansen@gmail.com>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
