@@ -17,9 +17,7 @@ $tempColumns = array (
 		'exclude' => 0,
 		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xml:users.tx_sfyubikey_yubikey_id',
 		'config' => array (
-			'type' => 'input',
-			'size' => '12',
-			'max' => '12',
+			'type' => 'text'
 		)
 	),
 );

@@ -23,17 +23,6 @@
  ***************************************************************/
 
 /**
- * Yubikey OTP Authentication Service
- */
-
-$yubicoPear = stream_resolve_include_path('Auth/Yubico.php');
-if ($yubicoPear !== FALSE) {
-	require_once 'Auth/Yubico.php';
-} else {
-	require_once(t3lib_extMgm::extPath('sf_yubikey', 'lib/php-yubico/Yubico.php'));
-}
-
-/**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
  *
  * @author Torben Hansen <derhansen@gmail.com>
@@ -41,43 +30,43 @@ if ($yubicoPear !== FALSE) {
  * @subpackage tx_sfyubikey
  */
 class tx_sfyubikey_sv1 extends tx_sv_authbase {
+
 	/**
 	 * Keeps class name.
 	 *
-	 * @var    string
+	 * @var string
 	 */
 	public $prefixId = 'tx_sfyubikey_sv1';
 
 	/**
 	 * Keeps path to this script relative to the extension directory.
 	 *
-	 * @var    string
+	 * @var string
 	 */
 	public $scriptRelPath = 'sv1/class.tx_sfyubikey_sv1.php';
 
 	/**
 	 * Keeps extension key.
 	 *
-	 * @var    string
+	 * @var string
 	 */
 	public $extKey = 'sf_yubikey';
 
 	/**
 	 * Keeps extension configuration.
 	 *
-	 * @var    mixed
+	 * @var mixed
 	 */
 	protected $extConf;
 
 	/**
 	 * Checks if service is available.
 	 *
-	 * @return    boolean        TRUE if service is available
+	 * @return boolean TRUE if service is available
 	 */
 	public function init () {
 		$available = FALSE;
 		$this->extConf = unserialize ($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_yubikey']);
-
 		if (isset($this->extConf['yubikeyEnableBE']) && (bool)$this->extConf['yubikeyEnableBE'] && TYPO3_MODE == 'BE') {
 			$available = TRUE;
 		} elseif (isset($this->extConf['yubikeyEnableFE']) && (bool)$this->extConf['yubikeyEnableFE'] && TYPO3_MODE == 'FE') {
@@ -98,49 +87,93 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 	 * @param array $user Array containing the usersata
 	 * @return int authentication statuscode, one of 0,100 and 200
 	 */
-	function authUser (array $user) {
-		$ret = 0; // 0 means authentication failure
+	public function authUser (array $user) {
+		// 0 means authentication failure
+		$ret = 0;
 
 		// Check if user Yubikey-Authentication is enabled for this user
 		if (!$user['tx_sfyubikey_yubikey_enable']) {
 			$this->writeDevLog (TYPO3_MODE . ' login using TYPO3 password authentication for user: ' . $user['username']);
-			$ret = 100; // Continue with TYPO3 authentication
+			// Continue with TYPO3 authentication
+			$ret = 100;
 		} else {
 			$this->writeDevLog (TYPO3_MODE . ' login using Yubikey authentication for user: ' . $user['username']);
 
 			// Get Yubikey OTP
 			$yubikeyOTP = t3lib_div::_GP ('t3-yubikey');
 			$this->writeDevLog ('Yubikey: ' . $yubikeyOTP);
-
+			$tempYubiKeyIds = t3lib_div::trimExplode(chr(10), $user['tx_sfyubikey_yubikey_id'], TRUE);
+			$yubiKeyIds = array();
+			foreach ($tempYubiKeyIds AS $tempYubiKeyId ) {
+				$yubiKeyIds[] = substr($tempYubiKeyId, 0, 12);
+			}
 			// Check, if Yubikey-ID does match with users Yubikey-ID
-			if ($user['tx_sfyubikey_yubikey_id'] == substr ($yubikeyOTP, 0, 12)) {
+			if ( in_array(substr ($yubikeyOTP, 0, 12), $yubiKeyIds) ) {
 				$clientId = $this->extConf['yubikeyClientId'];
 				$clientKey = $this->extConf['yubikeyClientKey'];
 				$useSSL = $this->extConf['yubikeyUseHTTPS'] ? $this->extConf['yubikeyUseHTTPS'] : 0;
 
 				$this->writeDevLog ('Yubikey config - ClientId: ' . $clientId);
 
-				// Initialize Yubikey Login
-				$yubi = new Auth_Yubico((int)$clientId, $clientKey, $useSSL);
-				$auth = $yubi->verify ($yubikeyOTP);
+				/**
+				 * Check if PEAR is enabled in EM conf. Use the native
+				 * client PHP otherwise.
+				 */
+				if ( intval($this->extConf['usePear'] === 1 ) ) {
+					// Include Yubikey OTP Authentication Service
+					$yubicoPear = stream_resolve_include_path('Auth/Yubico.php');
+					if ($yubicoPear !== FALSE) {
+						require_once 'Auth/Yubico.php';
+					} else {
+						require_once(t3lib_extMgm::extPath('sf_yubikey', 'lib/php-yubico/Yubico.php'));
+					}
 
-				if (PEAR::isError ($auth)) {
-					$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
-					$this->writelog (255, 3, 3, 1,
-						$errorMessage,
-						array(
-							$this->authInfo['REMOTE_ADDR'],
-							$this->authInfo['REMOTE_HOST'],
-							$this->login['uname']
-						)
-					);
-					$ret = 0;
+					// Initialize Yubikey Login
+					$yubi = new Auth_Yubico((int)$clientId, $clientKey, $useSSL);
+					$auth = $yubi->verify ($yubikeyOTP);
+
+					if (PEAR::isError ($auth)) {
+						$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
+						$this->writelog (255, 3, 3, 1,
+							$errorMessage,
+							array(
+								$this->authInfo['REMOTE_ADDR'],
+								$this->authInfo['REMOTE_HOST'],
+								$this->login['uname']
+							)
+						);
+						$ret = 0;
+					} else {
+						// Continue to other auth-service(s)
+						$ret = 100;
+					}
+					$this->writeDevLog ('Yubico Response:' . $yubi->getLastResponse ());
 				} else {
-					// Continue to other auth-service(s)
-					$ret = 100;
-				}
 
-				$this->writeDevLog ('Yubico Response:' . $yubi->getLastResponse ());
+					// Initialize Yubikey Verification
+					$yubiKeyAuth = t3lib_div::makeInstance('Tx_SfYubiKey_YubiKeyAuth', $this->extConf );
+					$authResult = $yubiKeyAuth->checkOtp( $yubikeyOTP );
+
+					if ( $authResult === FALSE ) {
+						$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
+						$this->writelog (255, 3, 3, 1,
+							$errorMessage,
+							array(
+								$this->authInfo['REMOTE_ADDR'],
+								$this->authInfo['REMOTE_HOST'],
+								$this->login['uname']
+							)
+						);
+						$ret = 0;
+					} else {
+						// Continue to other auth-service(s)
+						$ret = 100;
+					}
+				}
+				// Class only available if using PEAR
+				if ( intval($this->extConf['usePear'] === 1 ) ) {
+					$this->writeDevLog('Yubico Response:' . $yubi->getLastResponse());
+				}
 			} else {
 				if ($yubikeyOTP != '') {
 					// Wrong Yubikey ID - Authentication failure
@@ -171,7 +204,7 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 	 * @param string $message Message for devlog
 	 * @return void
 	 */
-	function writeDevLog ($message) {
+	private function writeDevLog ($message) {
 		if ($this->extConf['devlog']) {
 			t3lib_div::devLog ($message, 'tx_sfyubikey_sv1', 0);
 		}
