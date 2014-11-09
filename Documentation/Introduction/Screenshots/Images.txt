@@ -1,0 +1,7 @@
+﻿.. |login|      image:: ../../Images/yubikey-login.png
+   :height: 338
+   :width: 470
+.. :align: left
+.. :border: 0
+.. :name: YubiKey TYPO3 backend login
+

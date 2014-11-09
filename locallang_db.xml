@@ -7,7 +7,7 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="users.tx_sfyubikey_yubikey_enable">Enable YubiKey two-factor authentication</label>
-			<label index="users.tx_sfyubikey_yubikey_id">YubiKey ID (insert YubiKey and press the YubiKey button)</label>
+			<label index="users.tx_sfyubikey_yubikey_id">YubiKey ID(s) - one per line. (Insert YubiKey and press the YubiKey button)</label>
 		</languageKey>
 	</data>
 </T3locallang>

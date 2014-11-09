@@ -1,0 +1,7 @@
+﻿.. |be-user-settings|      image:: ../../Images/yubikey-be-user.png
+   :height: 291
+   :width: 469
+.. :align: left
+.. :border: 0
+.. :name: Backend user settings
+
