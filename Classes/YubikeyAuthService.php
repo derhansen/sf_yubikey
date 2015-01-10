@@ -111,45 +111,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 			// Check, if Yubikey-ID does match with users Yubikey-ID
 			if (in_array(substr($yubikeyOtp, 0, 12), $yubiKeyIds)) {
 				$clientId = $this->extConf['yubikeyClientId'];
-				$clientKey = $this->extConf['yubikeyClientKey'];
-				$useSsl = $this->extConf['yubikeyUseHTTPS'] ? $this->extConf['yubikeyUseHTTPS'] : 0;
-
 				$this->writeDevLog('Yubikey config - ClientId: ' . $clientId);
-
-				/**
-				 * Check if PEAR is enabled in EM conf. Use the native
-				 * client PHP otherwise.
-				 */
-				if (intval($this->extConf['usePear'] === 1)) {
-					// Include Yubikey OTP Authentication Service
-					$yubicoPear = stream_resolve_include_path('Auth/Yubico.php');
-					if ($yubicoPear !== FALSE) {
-						require_once 'Auth/Yubico.php';
-					} else {
-						require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('sf_yubikey', 'lib/php-yubico/Yubico.php'));
-					}
-
-					// Initialize Yubikey Login
-					$yubi = new Auth_Yubico((int)$clientId, $clientKey, $useSsl);
-					$auth = $yubi->verify ($yubikeyOtp);
-
-					if (PEAR::isError ($auth)) {
-						$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
-						$this->writelog(255, 3, 3, 1,
-							$errorMessage,
-							array(
-								$this->authInfo['REMOTE_ADDR'],
-								$this->authInfo['REMOTE_HOST'],
-								$this->login['uname']
-							)
-						);
-						$ret = 0;
-					} else {
-						// Continue to other auth-service(s)
-						$ret = 100;
-					}
-					$this->writeDevLog('Yubico Response:' . $yubi->getLastResponse ());
-				} else {
 
 					// Initialize Yubikey Verification
 					$yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_SfYubiKey_YubiKeyAuth', $this->extConf);
@@ -170,11 +132,6 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 						// Continue to other auth-service(s)
 						$ret = 100;
 					}
-				}
-				// Class only available if using PEAR
-				if (intval($this->extConf['usePear'] === 1)) {
-					$this->writeDevLog('Yubico Response:' . $yubi->getLastResponse());
-				}
 			} else {
 				if ($yubikeyOtp != '') {
 					// Wrong Yubikey ID - Authentication failure
