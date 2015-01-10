@@ -1,21 +1,12 @@
 <?php
 
-########################################################################
-# Extension Manager/Repository config file for ext "sf_yubikey".
-#
-# Auto generated 10-06-2012 12:14
-#
-# Manual updates:
-# Only the data in the array - everything else is removed by next
-# writing. "version" and "dependencies" must not be touched!
-########################################################################
-
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'YubiKey two-factor OTP authentication',
 	'description' => 'An authentication service for TYPO3 which extends the backend/frontend login by YubiKey OTP two-factor authentication.',
 	'category' => 'services',
 	'author' => 'Torben Hansen',
 	'author_email' => 'derhansen@gmail.com',
+	'author_company' => 'Skyfillers GmbH',
 	'shy' => '',
 	'dependencies' => '',
 	'conflicts' => '',
@@ -28,11 +19,10 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
-	'author_company' => 'Skyfillers GmbH',
-	'version' => '0.7.0',
+	'version' => '0.8.0-dev',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.0-6.2.99',
+			'typo3' => '6.2.0-7.9.99',
 		),
 		'conflicts' => array(
 		),
@@ -43,4 +33,3 @@ $EM_CONF[$_EXTKEY] = array(
 	),
 );
 
-?>

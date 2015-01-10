@@ -1,8 +1,10 @@
 <?php
+namespace DERHANSEN\SfYubikey;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 - 2014 Torben Hansen <derhansen@gmail.com>
+ *  (c) 2012 - 2015 Torben Hansen <derhansen@gmail.com>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,7 +31,7 @@
  * @package TYPO3
  * @subpackage tx_sfyubikey
  */
-class tx_sfyubikey_sv1 extends tx_sv_authbase {
+class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 
 	/**
 	 * Keeps class name.
@@ -99,9 +101,9 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 			$this->writeDevLog(TYPO3_MODE . ' login using Yubikey authentication for user: ' . $user['username']);
 
 			// Get Yubikey OTP
-			$yubikeyOtp = t3lib_div::_GP ('t3-yubikey');
+			$yubikeyOtp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP ('t3-yubikey');
 			$this->writeDevLog('Yubikey: ' . $yubikeyOtp);
-			$tempYubiKeyIds = t3lib_div::trimExplode(chr(10), $user['tx_sfyubikey_yubikey_id'], TRUE);
+			$tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(chr(10), $user['tx_sfyubikey_yubikey_id'], TRUE);
 			$yubiKeyIds = array();
 			foreach ($tempYubiKeyIds AS $tempYubiKeyId) {
 				$yubiKeyIds[] = substr($tempYubiKeyId, 0, 12);
@@ -124,7 +126,7 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 					if ($yubicoPear !== FALSE) {
 						require_once 'Auth/Yubico.php';
 					} else {
-						require_once(t3lib_extMgm::extPath('sf_yubikey', 'lib/php-yubico/Yubico.php'));
+						require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('sf_yubikey', 'lib/php-yubico/Yubico.php'));
 					}
 
 					// Initialize Yubikey Login
@@ -150,7 +152,7 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 				} else {
 
 					// Initialize Yubikey Verification
-					$yubiKeyAuth = t3lib_div::makeInstance('Tx_SfYubiKey_YubiKeyAuth', $this->extConf);
+					$yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_SfYubiKey_YubiKeyAuth', $this->extConf);
 					$authResult = $yubiKeyAuth->checkOtp($yubikeyOtp);
 
 					if ($authResult === FALSE) {
@@ -204,7 +206,7 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 	 */
 	private function writeDevLog($message) {
 		if ($this->extConf['devlog']) {
-			t3lib_div::devLog ($message, 'tx_sfyubikey_sv1', 0);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog ($message, 'tx_sfyubikey_sv1', 0);
 		}
 	}
 
@@ -213,5 +215,3 @@ class tx_sfyubikey_sv1 extends tx_sv_authbase {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/sf_yubikey/sv1/class.tx_sfyubikey_sv1.php']) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/sf_yubikey/sv1/class.tx_sfyubikey_sv1.php']);
 }
-
-?>
