@@ -211,7 +211,3 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 	}
 
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/sf_yubikey/sv1/class.tx_sfyubikey_sv1.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/sf_yubikey/sv1/class.tx_sfyubikey_sv1.php']);
-}
