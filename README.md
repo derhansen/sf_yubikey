@@ -1,4 +1,4 @@
-YubiKey two-factor authentication for TYPO3
+YubiKey two-factor authentication for TYPO3 [![Build Status](https://travis-ci.org/derhansen/sf_yubikey.svg?branch=master)](https://travis-ci.org/derhansen/sf_yubikey)
 ===========================================
 
 ## What is it?
