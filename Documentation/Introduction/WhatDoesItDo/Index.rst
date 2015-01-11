@@ -30,6 +30,6 @@ A YubiKey enabled user has to enter his username, password and a OTP
 to login to the TYPO3 backend and/or frontend.
 
 More information about the YubiKey, Yubico and the YubiCloud OTP
-validation service can be found at `http://www.yubicom.com
-<http://www.yubicom.com/>`_
+validation service can be found at `http://www.yubico.com
+<http://www.yubico.com/>`_
 

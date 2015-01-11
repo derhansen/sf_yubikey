@@ -62,32 +62,6 @@ are four other settings that can be configured.
          False
 
  - :Property:
-         yubikeyUseSSL
-
-   :Date type:
-         boolean
-
-   :Description:
-         Uses SSL to communicate with the YubiCloud authentication servers. Only respected, if [usePear] is enabled.
-
-   :Default:
-         True
-
- - :Property:
-         usePear
-
-   :Date type:
-         boolean
-
-   :Description:
-         If checked, the YubiKey pear library will be used to validate YubiKey OTPs. Since version 0.7.0, the
-         extension contains a native YubiKey OTP validation through Yubico API server configured in [yubikeyApiUrl]
-         If you enable this option, make sure that pear is available on you server!
-
-   :Default:
-         False
-
- - :Property:
          devlog
 
    :Date type:
@@ -130,7 +104,7 @@ are four other settings that can be configured.
          string
 
    :Description:
-         The Yubico API URL to validate YubiKey OTPs
+         The Yubico API URL to validate YubiKey OTPs. This may also be an own instance of a YubiKey validation server.
 
    :Default:
          https://api.yubico.com/wsapi/verify
