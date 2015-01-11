@@ -36,7 +36,7 @@ YubiKey two-factor OTP authentication
 	yubikey, yubico, two-factor, authentication, service
 
 :Copyright:
-	2012 - 2014
+	2012 - 2015
 
 :Author:
 	Torben Hansen
@@ -67,4 +67,5 @@ a GNU/GPL CMS/Framework available from `www.typo3.org <http://www.typo3.org/>`_.
    Configuration/Index
    KnownProblems/Index
    To-doList/Index
+   Changes/Index
 

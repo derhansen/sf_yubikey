@@ -1,4 +1,5 @@
 <?php
+namespace DERHANSEN\SfYubikey;
 /***************************************************************
  *  Copyright notice
  *
@@ -32,7 +33,7 @@
  * @subpackage	tx_sfyubikey
  * @license		GPL
  */
-class Tx_SfYubiKey_YubiKeyAuth {
+class YubikeyAuth {
 
 	/**
 	 * @var array
@@ -80,10 +81,10 @@ class Tx_SfYubiKey_YubiKeyAuth {
 	 * @return Boolean Does the signature match ?
 	 */
 	public function verifyHmac($response, $yubicoApiKey) {
-		$lines = t3lib_div::trimExplode(chr(10), $response);
+		$lines = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(chr(10), $response);
 			// Create array from data
 		foreach ($lines as $line) {
-			$lineparts = t3lib_div::trimExplode('=', $line, FALSE, 2);
+			$lineparts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('=', $line, FALSE, 2);
 			$result[$lineparts[0]] = trim($lineparts[1]);
 		}
 		// Sort array Alphabetically based on keys
@@ -163,5 +164,3 @@ class Tx_SfYubiKey_YubiKeyAuth {
 	}
 
 }
-
-?>

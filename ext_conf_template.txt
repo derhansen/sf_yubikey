@@ -10,14 +10,8 @@ yubikeyClientId =
 # cat=basic; type=string; label=Yubico Client Key: 
 yubikeyClientKey =
 
-# cat=basic/enable; type=boolean; label=Use SSL for authentication: Uses SSL to communicate with the authentication servers. If not checked, HTTP will be used.
-yubikeyUseSSL = 0
-
 # cat=basic; type=string; label=Yubico API Url:
 yubikeyApiUrl = https://api.yubico.com/wsapi/verify
-
-# cat=basic/enable; type=boolean; label=Use Pear: Use Pear or inline class
-usePear = 0
 
 # cat=basic/enable; type=boolean; label=Devlog: Write Debug Information to devlog
 devlog = 0

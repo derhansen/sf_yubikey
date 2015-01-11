@@ -14,12 +14,15 @@
    :class:  typoscript
 .. role::   php(code)
 
+Changes
+-------
 
-To-Do list
-----------
+A list of all changes can be found on GitHub
+`https://github.com/derhansen/sf_yubikey/commits/master
+<https://github.com/derhansen/sf_yubikey/commits/master>`_
 
-If you have additional wished, feel free to report them at
-`https://github.com/derhansen/sf\_yubikey
-<https://github.com/derhansen/sf_yubikey>`_
-
+Important Changes
+=================
+Since v0.8.0, YubiKey OTP validation is only handled through the bundled class **YubikeyAuth**. The usage of PEAR
+classes has been removed.
 
