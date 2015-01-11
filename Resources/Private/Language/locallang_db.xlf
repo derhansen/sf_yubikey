@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-01-11T11:22:01Z" product-name="sf_yubikey">
+		<header/>
+		<body>
+			<trans-unit id="users.tx_sfyubikey_yubikey_enable">
+				<source>Enable YubiKey two-factor authentication</source>
+			</trans-unit>
+			<trans-unit id="users.tx_sfyubikey_yubikey_id">
+				<source>YubiKey ID(s) - one per line. (Insert YubiKey and press the YubiKey button)</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

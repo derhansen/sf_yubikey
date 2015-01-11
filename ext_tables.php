@@ -6,14 +6,14 @@ $extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
 $tempColumns = array (
 	'tx_sfyubikey_yubikey_enable' => array (
 		'exclude' => 0,
-		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xml:users.tx_sfyubikey_yubikey_enable',
+		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xlf:users.tx_sfyubikey_yubikey_enable',
 		'config' => array (
 			'type' => 'check',
 		)
 	),
 	'tx_sfyubikey_yubikey_id' => array (
 		'exclude' => 0,
-		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xml:users.tx_sfyubikey_yubikey_id',
+		'label' => 'LLL:EXT:sf_yubikey/locallang_db.xlf:users.tx_sfyubikey_yubikey_id',
 		'config' => array (
 			'type' => 'text'
 		)
