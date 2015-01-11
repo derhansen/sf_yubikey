@@ -114,7 +114,8 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 				$this->writeDevLog('Yubikey config - ClientId: ' . $clientId);
 
 					// Initialize Yubikey Verification
-					$yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_SfYubiKey_YubiKeyAuth', $this->extConf);
+					/** @var \DERHANSEN\SfYubikey\YubikeyAuth $yubiKeyAuth */
+					$yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('DERHANSEN\SfYubikey\YubikeyAuth', $this->extConf);
 					$authResult = $yubiKeyAuth->checkOtp($yubikeyOtp);
 
 					if ($authResult === FALSE) {

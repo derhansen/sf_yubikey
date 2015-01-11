@@ -1,4 +1,5 @@
 <?php
+namespace DERHANSEN\SfYubikey;
 /***************************************************************
  *  Copyright notice
  *
@@ -32,7 +33,7 @@
  * @subpackage	tx_sfyubikey
  * @license		GPL
  */
-class Tx_SfYubiKey_YubiKeyAuth {
+class YubikeyAuth {
 
 	/**
 	 * @var array
