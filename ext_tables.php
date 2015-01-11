@@ -23,15 +23,15 @@ $tempColumns = array (
 /* Set login template based on TYPO3 version */
 $version = explode('.', TYPO3_version);
 $tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
-$template = 'typo3conf/ext/sf_yubikey/res/login-v6.html';
+$template = 'typo3conf/ext/sf_yubikey/Resources/Private/Templates/login-v6.html';
 if ($version[0] == 7) {
 	$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
-	$template = 'typo3conf/ext/sf_yubikey/res/login-v7.html';
+	$template = 'typo3conf/ext/sf_yubikey/Resources/Private/Templates/login-v7.html';
 }
 
 if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
 	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
-	$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/sf_yubikey/res/sf_yubikey.css';
+	$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/sf_yubikey/Resources/Public/Css/sf_yubikey.css';
 }
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('be_users',$tempColumns,1);
