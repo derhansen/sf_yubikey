@@ -62,6 +62,13 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 	protected $extConf;
 
 	/**
+	 * YubiKey authentication helper
+	 *
+	 * @var \DERHANSEN\SfYubikey\YubikeyAuth
+	 */
+	protected $yubiKeyAuth = NULL;
+
+	/**
 	 * Checks if service is available.
 	 *
 	 * @return boolean TRUE if service is available
@@ -69,6 +76,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 	public function init() {
 		$available = FALSE;
 		$this->extConf = unserialize ($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_yubikey']);
+		$this->yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('DERHANSEN\SfYubikey\YubikeyAuth', $this->extConf);
 		if (isset($this->extConf['yubikeyEnableBE']) && (bool)$this->extConf['yubikeyEnableBE'] && TYPO3_MODE == 'BE') {
 			$available = TRUE;
 		} elseif (isset($this->extConf['yubikeyEnableFE']) && (bool)$this->extConf['yubikeyEnableFE'] && TYPO3_MODE == 'FE') {
@@ -85,8 +93,8 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 	 *  - 100 - just go on. User is not authenticated but there is still no reason to stop
 	 *  - 200 - the service was able to authenticate the user
 	 *
-	 * @param array $user Array containing the usersata
-	 * @return int authentication statuscode, one of 0,100 and 200
+	 * @param array $user Array containing the userdata
+	 * @return int authentication statuscode, one of 0, 100 and 200
 	 */
 	public function authUser(array $user) {
 		// 0 means authentication failure
@@ -101,7 +109,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 			$this->writeDevLog(TYPO3_MODE . ' login using Yubikey authentication for user: ' . $user['username']);
 
 			// Get Yubikey OTP
-			$yubikeyOtp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP ('t3-yubikey');
+			$yubikeyOtp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('t3-yubikey');
 			$this->writeDevLog('Yubikey: ' . $yubikeyOtp);
 			$tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(chr(10), $user['tx_sfyubikey_yubikey_id'], TRUE);
 			$yubiKeyIds = array();
@@ -113,10 +121,8 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 				$clientId = $this->extConf['yubikeyClientId'];
 				$this->writeDevLog('Yubikey config - ClientId: ' . $clientId);
 
-					// Initialize Yubikey Verification
-					/** @var \DERHANSEN\SfYubikey\YubikeyAuth $yubiKeyAuth */
-					$yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('DERHANSEN\SfYubikey\YubikeyAuth', $this->extConf);
-					$authResult = $yubiKeyAuth->checkOtp($yubikeyOtp);
+					// Check Yubikey OTP
+					$authResult = $this->yubiKeyAuth->checkOtp($yubikeyOtp);
 
 					if ($authResult === FALSE) {
 						$errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
