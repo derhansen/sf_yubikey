@@ -16,6 +16,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'category' => 'services',
 	'author' => 'Torben Hansen',
 	'author_email' => 'derhansen@gmail.com',
+	'author_company' => 'Skyfillers GmbH',
 	'shy' => '',
 	'dependencies' => '',
 	'conflicts' => '',
@@ -28,11 +29,10 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
-	'author_company' => 'Skyfillers GmbH',
-	'version' => '0.7.1',
+	'version' => '0.8.0-dev',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.0-6.2.99',
+			'typo3' => '6.2.0-7.99.99',
 		),
 		'conflicts' => array(
 		),
