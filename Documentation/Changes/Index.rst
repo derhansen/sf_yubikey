@@ -23,6 +23,6 @@ A list of all changes can be found on GitHub
 
 Important Changes
 =================
-Since v0.8.0, YubiKey OTP validation is only handled through the bundled class **YubikeyAuth**. The usage of PEAR
-classes has been removed.
+Since version 1.0.0, YubiKey OTP validation is only handled through the bundled class **YubikeyAuth**.
+The usage of PEAR classes has been removed.
 

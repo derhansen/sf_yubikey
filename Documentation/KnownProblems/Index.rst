@@ -20,7 +20,7 @@ Known problems
 
 None at the moment.
 
-If you think you have found a bug, please report it at forge.
+If you think you've found a bug, please report it on GitHub.
 
 `https://github.com/derhansen/sf\_yubikey
 <https://github.com/derhansen/sf_yubikey>`_

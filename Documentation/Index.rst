@@ -66,6 +66,5 @@ a GNU/GPL CMS/Framework available from `www.typo3.org <http://www.typo3.org/>`_.
    Administration/Index
    Configuration/Index
    KnownProblems/Index
-   To-doList/Index
    Changes/Index
 
