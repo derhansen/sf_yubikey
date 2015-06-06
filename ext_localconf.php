@@ -16,6 +16,7 @@ defined('TYPO3_MODE') or die();
 );
 
 $extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
-if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE'] && version_compare(phpversion(), '5.5.0', '>=')) {
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] = DERHANSEN\SfYubikey\LoginProvider\YubikeyLoginProvider::class;
+if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
+	// We can't use ::class below, to keep compatibility to PHP 5.3 and 5.4
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] = 'DERHANSEN\\SfYubikey\\LoginProvider\\YubikeyLoginProvider';
 }
