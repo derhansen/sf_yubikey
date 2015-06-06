@@ -30,3 +30,11 @@ body#typo3-index-php .t3-login-yubikey-v6 input.yubikey {
 	background-repeat: no-repeat;
 	background-position: right 10px center;
 }
+
+.t3yubikey {
+    width: 16px;
+    height: 16px;
+    background-image: url('../Images/yubi_16x16.png');
+    background-repeat: no-repeat;
+    display: block;
+}

@@ -18,7 +18,12 @@
 Screenshots
 ^^^^^^^^^^^
 
-|login|
+|login-62|
 
-The YubiKey enabled TYPO3 backend login
+The YubiKey enabled TYPO3 backend login (TYPO3 6.2)
+
+|login-73|
+
+The YubiKey enabled TYPO3 backend login (TYPO3 7.3)
+
 

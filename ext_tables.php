@@ -24,7 +24,7 @@ $tempColumns = array (
 $version = explode('.', TYPO3_version);
 $tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
 $template = 'typo3conf/ext/sf_yubikey/Resources/Private/Templates/login-v6.html';
-if ($version[0] == 7) {
+if ($version[0] == 7 && $version[1] < 2) {
 	$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
 	$template = 'typo3conf/ext/sf_yubikey/Resources/Private/Templates/login-v7.html';
 }
@@ -33,13 +33,6 @@ if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
 	// For TYPO3 6.2.x to 7.1.x
 	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
 	$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/sf_yubikey/Resources/Public/Css/sf_yubikey.css';
-
-	// Since TYPO3 7.3
-	if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginTemplate']['formTemplates'])) {
-		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginTemplate']['formTemplates'] = array();
-	}
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginTemplate']['formTemplates']['sfyubikey'] = 'EXT:sf_yubikey/Resources/Private/Templates/Login-v72.html';
-
 }
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('be_users',$tempColumns,1);
