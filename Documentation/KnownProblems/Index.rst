@@ -18,7 +18,7 @@
 Known problems
 --------------
 
-None at the moment.
+* The YubiKey extension does not work with TYPO3 7.2, because you can't add own fields to the backend login in that TYPO3 version.
 
 If you think you've found a bug, please report it on GitHub.
 

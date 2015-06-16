@@ -1,7 +1,13 @@
-﻿.. |login|      image:: ../../Images/yubikey-login.png
+﻿.. |login-62|      image:: ../../Images/yubikey-login.png
    :height: 338
    :width: 470
 .. :align: left
 .. :border: 0
-.. :name: YubiKey TYPO3 backend login
+.. :name: YubiKey TYPO3 6.2 backend login
 
+.. |login-73|      image:: ../../Images/yubikey-loginform-73.png
+   :height: 345
+   :width: 307
+.. :align: left
+.. :border: 0
+.. :name: YubiKey TYPO3 7.3 backend login

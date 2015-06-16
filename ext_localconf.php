@@ -14,3 +14,9 @@ defined('TYPO3_MODE') or die();
 		'className' => 'DERHANSEN\SfYubikey\YubikeyAuthService'
 	)
 );
+
+$extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
+if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
+	// We can't use ::class below, to keep compatibility to PHP 5.3 and 5.4
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] = 'DERHANSEN\\SfYubikey\\LoginProvider\\YubikeyLoginProvider';
+}
