@@ -42,7 +42,7 @@ script:
   - >
     echo;
     echo "Running unit tests";
-    ./bin/phpunit --colors -c typo3/sysext/core/Build/UnitTests.xml typo3conf/ext/sf_yubikey/Tests/Unit/
+    ./bin/phpunit --colors -c typo3conf/ext/sf_yubikey/Tests/Build/UnitTests.xml
   - >
     echo;
     echo "Running php lint";
