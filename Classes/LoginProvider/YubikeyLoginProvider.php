@@ -23,18 +23,20 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 /**
  * Class YubikeyLoginProvider
  */
-class YubikeyLoginProvider extends UsernamePasswordLoginProvider {
+class YubikeyLoginProvider extends UsernamePasswordLoginProvider
+{
 
-	/**
-	 * Renders the login fields
-	 *
-	 * @param StandaloneView $view
-	 * @param PageRenderer $pageRenderer
-	 * @param LoginController $loginController
-	 */
-	public function render(StandaloneView $view, PageRenderer $pageRenderer, LoginController $loginController) {
-		parent::render($view, $pageRenderer, $loginController);
-		$view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName('EXT:sf_yubikey/Resources/Private/Templates/LoginYubikey.html'));
-	}
+    /**
+     * Renders the login fields
+     *
+     * @param StandaloneView $view
+     * @param PageRenderer $pageRenderer
+     * @param LoginController $loginController
+     */
+    public function render(StandaloneView $view, PageRenderer $pageRenderer, LoginController $loginController)
+    {
+        parent::render($view, $pageRenderer, $loginController);
+        $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName('EXT:sf_yubikey/Resources/Private/Templates/LoginYubikey.html'));
+    }
 
 }
