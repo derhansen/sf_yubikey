@@ -18,6 +18,13 @@ matrix:
     - php: 5.4
       env: DB=mysql TYPO3_BRANCH=master
 
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - parallel
+
 notifications:
   email:
     - derhansen@gmail.com
