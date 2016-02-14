@@ -1,0 +1,28 @@
+{
+  "name": "derhansen/sf_yubikey",
+  "type": "typo3-cms-extension",
+  "description": "Two-factor authentication with a YubiKey OTP",
+  "homepage": "https://github.com/derhansen/sf_yubikey",
+  "support": {
+	"issues": "https://github.com/derhansen/sf_yubikey/issues"
+  },
+  "authors": [
+	{
+	  "name": "Torben Hansen",
+	  "email": "derhansen@gmail.com",
+	  "homepage": "http://www.derhansen.de",
+	  "role": "Developer"
+	}
+  ],
+  "keywords": ["TYPO3 CMS", "yubikey", "two-factor authentication"],
+  "license": ["GPL-2.0+"],
+  "version": "1.1.2",
+  "autoload": {
+	"psr-4": {
+	  "DERHANSEN\\SfEventMgt\\": "Classes"
+	}
+  },
+  "replace": {
+	"sf_yubikey": "*"
+  }
+}
