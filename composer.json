@@ -16,10 +16,10 @@
   ],
   "keywords": ["TYPO3 CMS", "yubikey", "two-factor authentication"],
   "license": ["GPL-2.0+"],
-  "version": "1.1.2",
+  "version": "1.1.3",
   "autoload": {
 	"psr-4": {
-	  "DERHANSEN\\SfEventMgt\\": "Classes"
+	  "DERHANSEN\\SfYubikey\\": "Classes"
 	}
   },
   "replace": {
