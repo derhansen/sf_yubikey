@@ -6,26 +6,29 @@ php:
   - 7.0
 
 env:
-  - DB=mysql TYPO3_BRANCH=TYPO3_6-2
-  - DB=mysql TYPO3_BRANCH=TYPO3_7-6
-  - DB=mysql TYPO3_BRANCH=master
+  matrix:
+    - DB=mysql TYPO3_BRANCH=TYPO3_6-2
+    - DB=mysql TYPO3_BRANCH=TYPO3_7-6
+    - DB=mysql TYPO3_BRANCH=master
+  global:
+    secure: INo+FZa/Z2hTw6UwwMh0qjKllgIlqSz8S7S76HGR15L4sqnmG22spT4IwXjavV2jfR/Glo6PxR5dz9Bn9Br03dh72MThLKqBAI9pJR+Ig3SNcvOGCm/8h4hrKUKJDkge+GQEzL4HuXO0OenEIPXCSlNFlBxQN824TMJFQgvGHnA=
 
 matrix:
   fast_finish: true
   include:
     - php: 5.6
-      env: DB=mysql TYPO3_BRANCH=TYPO3_7-6 COVERAGE=1
+      env: DB=mysql TYPO3_BRANCH=TYPO3_7-6
   exclude:
     - php: 5.4
-      env: DB=mysql TYPO3_BRANCH=TYPO3_7-6 COVERAGE=0
+      env: DB=mysql TYPO3_BRANCH=TYPO3_7-6
     - php: 5.4
-      env: DB=mysql TYPO3_BRANCH=master COVERAGE=0
+      env: DB=mysql TYPO3_BRANCH=master
     - php: 5.5
-      env: DB=mysql TYPO3_BRANCH=master COVERAGE=0
+      env: DB=mysql TYPO3_BRANCH=master
     - php: 5.6
-      env: DB=mysql TYPO3_BRANCH=master COVERAGE=0
+      env: DB=mysql TYPO3_BRANCH=master
     - php: 7.0
-      env: DB=mysql TYPO3_BRANCH=TYPO3_6-2 COVERAGE=0
+      env: DB=mysql TYPO3_BRANCH=TYPO3_6-2
 
 sudo: false
 
