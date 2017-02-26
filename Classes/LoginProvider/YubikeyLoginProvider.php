@@ -25,7 +25,6 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
  */
 class YubikeyLoginProvider extends UsernamePasswordLoginProvider
 {
-
     /**
      * Renders the login fields
      *
@@ -38,5 +37,4 @@ class YubikeyLoginProvider extends UsernamePasswordLoginProvider
         parent::render($view, $pageRenderer, $loginController);
         $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName('EXT:sf_yubikey/Resources/Private/Templates/LoginYubikey.html'));
     }
-
 }

@@ -1,39 +1,24 @@
 <?php
 namespace DERHANSEN\SfYubikey;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2012 - 2016 Torben Hansen <derhansen@gmail.com>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
- *
- * @author Torben Hansen <derhansen@gmail.com>
- * @package TYPO3
- * @subpackage tx_sfyubikey
  */
 class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
 {
-
     /**
      * Keeps class name.
      *
@@ -117,7 +102,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
             $this->writeDevLog('Yubikey: ' . $yubikeyOtp);
             $tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(chr(10),
                 $user['tx_sfyubikey_yubikey_id'], true);
-            $yubiKeyIds = array();
+            $yubiKeyIds = [];
             foreach ($tempYubiKeyIds AS $tempYubiKeyId) {
                 $yubiKeyIds[] = substr($tempYubiKeyId, 0, 12);
             }
@@ -133,11 +118,11 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
                     $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
                     $this->writelog(255, 3, 3, 1,
                         $errorMessage,
-                        array(
+                        [
                             $this->authInfo['REMOTE_ADDR'],
                             $this->authInfo['REMOTE_HOST'],
                             $this->login['uname']
-                        )
+                        ]
                     );
                     $ret = 0;
                 } else {
@@ -156,11 +141,11 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
                 }
                 $this->writelog(255, 3, 3, 1,
                     $errorMessage,
-                    array(
+                    [
                         $this->authInfo['REMOTE_ADDR'],
                         $this->authInfo['REMOTE_HOST'],
                         $this->login['uname']
-                    )
+                    ]
                 );
             }
         }
@@ -179,5 +164,4 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
             \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($message, 'tx_sfyubikey_sv1', 0);
         }
     }
-
 }

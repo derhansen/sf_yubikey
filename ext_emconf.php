@@ -1,6 +1,6 @@
 <?php
 
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
     'title' => 'YubiKey two-factor OTP authentication',
     'description' => 'An authentication service for TYPO3 which extends the backend/frontend login by YubiKey OTP two-factor authentication.',
     'category' => 'services',
@@ -19,13 +19,13 @@ $EM_CONF[$_EXTKEY] = array(
     'clearCacheOnLoad' => 1,
     'lockType' => '',
     'version' => '2.0.0-dev',
-    'constraints' => array(
-        'depends' => array(
+    'constraints' => [
+        'depends' => [
             'typo3' => '7.6.0-8.7.99',
             'php' => '5.4.0-7.1.99',
-        ),
-        'conflicts' => array(),
-        'suggests' => array(),
-    ),
-    'suggests' => array(),
-);
+        ],
+        'conflicts' => [],
+        'suggests' => [],
+    ],
+    'suggests' => [],
+];
