@@ -3,7 +3,7 @@ defined('TYPO3_MODE') or die();
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService($_EXTKEY, 'auth',
     'DERHANSEN\SfYubikey\YubikeyAuthService',
-    array(
+    [
         'title' => 'FE/BE YubiKey two-factor OTP Authentication',
         'description' => 'Two-factor authentication with a YubiKey OTP',
         'subtype' => 'authUserFE,authUserBE',
@@ -13,7 +13,7 @@ defined('TYPO3_MODE') or die();
         'os' => '',
         'exec' => '',
         'className' => DERHANSEN\SfYubikey\YubikeyAuthService::class
-    )
+    ]
 );
 
 $extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);

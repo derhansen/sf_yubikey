@@ -27,67 +27,67 @@ class YubikeyAuthServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function authUserDataProvider()
     {
-        return array(
-            'YubiKey not configured' => array(
-                array(),
+        return [
+            'YubiKey not configured' => [
+                [],
                 '',
                 null,
                 100
-            ),
-            'YubiKey not enabled' => array(
-                array(
+            ],
+            'YubiKey not enabled' => [
+                [
                     'tx_sfyubikey_yubikey_enable' => false
-                ),
+                ],
                 '',
                 null,
                 100
-            ),
-            'No YubiKey given for YubiKey enabled user' => array(
-                array(
+            ],
+            'No YubiKey given for YubiKey enabled user' => [
+                [
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001'
-                ),
+                ],
                 '',
                 null,
                 0
-            ),
-            'Given YubiKey does not belong to user' => array(
-                array(
+            ],
+            'Given YubiKey does not belong to user' => [
+                [
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001'
-                ),
+                ],
                 'yubikey00000someOTPvalue',
                 null,
                 0
-            ),
-            'Given YubiKey could not be validated' => array(
-                array(
+            ],
+            'Given YubiKey could not be validated' => [
+                [
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars'
-                ),
+                ],
                 'yubikey00001someOTPvalue',
                 false,
                 0
-            ),
-            'Given YubiKey validated successfully' => array(
-                array(
+            ],
+            'Given YubiKey validated successfully' => [
+                [
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars'
-                ),
+                ],
                 'yubikey00001someOTPvalue',
                 true,
                 100
-            ),
-            'Given YubiKey validated successfully for user having multiple yubikeys' => array(
-                array(
+            ],
+            'Given YubiKey validated successfully for user having multiple yubikeys' => [
+                [
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars' . chr(10) . 'yubikey00002ignoredchars'
-                ),
+                ],
                 'yubikey00002someOTPvalue',
                 true,
                 100
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -102,7 +102,7 @@ class YubikeyAuthServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
         // Set YubiKey OTP GET variable if given
         if ($yubikeyOtp != '') {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::_GETset(array('t3-yubikey' => $yubikeyOtp));
+            \TYPO3\CMS\Core\Utility\GeneralUtility::_GETset(['t3-yubikey' => $yubikeyOtp]);
         }
 
         // Set OTP validation result if given

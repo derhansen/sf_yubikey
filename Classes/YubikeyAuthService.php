@@ -57,7 +57,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
     /**
      * Checks if service is available.
      *
-     * @return boolean TRUE if service is available
+     * @return bool TRUE if service is available
      */
     public function init()
     {
@@ -103,7 +103,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
             $tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(chr(10),
                 $user['tx_sfyubikey_yubikey_id'], true);
             $yubiKeyIds = [];
-            foreach ($tempYubiKeyIds AS $tempYubiKeyId) {
+            foreach ($tempYubiKeyIds as $tempYubiKeyId) {
                 $yubiKeyIds[] = substr($tempYubiKeyId, 0, 12);
             }
             // Check, if Yubikey-ID does match with users Yubikey-ID
