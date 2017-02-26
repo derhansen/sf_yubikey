@@ -26,8 +26,7 @@
     "typo3/cms-core": "^7.6 || ^8.5"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.8.0",
-    "friendsofphp/php-cs-fixer": "^2.0"
+    "phpunit/phpunit": "~4.8.0"
   },
   "autoload": {
     "psr-4": {
@@ -45,6 +44,18 @@
       "typo3/cms": "source",
       "typo3/cms-core": "source",
       "*": "dist"
+    }
+  }
+  "scripts": {
+    "post-autoload-dump": [
+      "mkdir -p .Build/Web/typo3conf/ext/",
+      "[ -L .Build/Web/typo3conf/ext/sf_yubikey ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/sf_yubikey"
+    ]
+  },
+  "extra": {
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
     }
   }
 }
