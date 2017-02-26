@@ -45,7 +45,7 @@
       "typo3/cms-core": "source",
       "*": "dist"
     }
-  }
+  },
   "scripts": {
     "post-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
