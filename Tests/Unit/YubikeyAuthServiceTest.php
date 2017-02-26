@@ -104,7 +104,7 @@ class YubikeyAuthServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 		// Set OTP validation result if given
 		if ($checkOtpResult !== NULL) {
-			$yubikeyAuth = $this->getMock('DERHANSEN\\SfYubikey\\YubikeyAuth', array(), array(), '', FALSE);
+			$yubikeyAuth = $this->createMock(\DERHANSEN\SfYubikey\YubikeyAuth::class);
 			$yubikeyAuth->expects($this->once())->method('checkOtp')->with($yubikeyOtp)->will($this->returnValue($checkOtpResult));
 			$this->inject($authenticationService, 'yubiKeyAuth', $yubikeyAuth);
 		}
