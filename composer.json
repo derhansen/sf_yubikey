@@ -26,11 +26,17 @@
     "typo3/cms-core": "^7.6 || ^8.5"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.8.0"
+    "phpunit/phpunit": "~4.8.0",
+    "nimut/testing-framework": "^1.0"
   },
   "autoload": {
     "psr-4": {
       "DERHANSEN\\SfYubikey\\": "Classes"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DERHANSEN\\SfYubikey\\": "Tests"
     }
   },
   "replace": {
@@ -39,12 +45,7 @@
   },
   "config": {
     "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin",
-    "preferred-install": {
-      "typo3/cms": "source",
-      "typo3/cms-core": "source",
-      "*": "dist"
-    }
+    "bin-dir": ".Build/bin"
   },
   "scripts": {
     "post-autoload-dump": [
