@@ -25,5 +25,5 @@ $tempColumns = [
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     'be_users',
-    '--div--;YubiKey,tx_sfyubikey_yubikey_enable;;;;1-1-1, tx_sfyubikey_yubikey_id'
+    '--div--;YubiKey,tx_sfyubikey_yubikey_enable, tx_sfyubikey_yubikey_id'
 );
