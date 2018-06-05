@@ -14,7 +14,6 @@ namespace DERHANSEN\SfYubikey\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-
 /**
  * User Settings class
  */
