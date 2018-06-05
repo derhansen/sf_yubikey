@@ -104,6 +104,9 @@ class YubikeyAuth
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Enhanced TYPO3 Yubikey OTP Login Service');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
+            curl_setopt($ch, CURLOPT_PROXY, $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
+        }
         $response = trim(curl_exec($ch));
         curl_close($ch);
 
