@@ -28,7 +28,7 @@
     "typo3/cms-extbase": ">=7.6 <9.5 || dev-master",
     "typo3/cms-fluid": ">=7.6 <9.5 || dev-master",
     "typo3/cms-frontend": ">=7.6 <9.5 || dev-master",
-    "typo3/cms-install": ">=7.6 <9.5 || dev-master",
+    "typo3/cms-install": ">=7.6 <9.5 || dev-master"
   },
   "require-dev": {
     "nimut/testing-framework": ">=1.0 <4.1.3"
