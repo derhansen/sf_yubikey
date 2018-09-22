@@ -23,7 +23,7 @@
     "GPL-2.0+"
   ],
   "require": {
-    "typo3/cms-core": "^7.6 || ^8.5"
+    "typo3/cms-core": ">=7.6 <9.5 || dev-master"
   },
   "require-dev": {
     "nimut/testing-framework": "^4.0"
