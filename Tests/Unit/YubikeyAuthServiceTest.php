@@ -14,10 +14,12 @@ namespace DERHANSEN\SfYubikey\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
+
 /**
  * Testcase for class DERHANSEN\SfYubikey\YubikeyAuthService
  */
-class YubikeyAuthServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class YubikeyAuthServiceTest extends UnitTestCase
 {
 
     /**
