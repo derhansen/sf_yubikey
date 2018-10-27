@@ -3,3 +3,4 @@
 atlassian-ide-plugin.xml
 .Build
 composer.lock
+var/
