@@ -107,4 +107,4 @@ are four other settings that can be configured.
          The Yubico API URL to validate YubiKey OTPs. This may also be an own instance of a YubiKey validation server.
 
    :Default:
-         https://api.yubico.com/wsapi/verify
+         https://api.yubico.com/wsapi/2.0/verify
