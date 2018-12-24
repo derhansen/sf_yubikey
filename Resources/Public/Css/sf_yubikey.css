@@ -20,13 +20,13 @@ body#typo3-index-php .t3-login-yubikey-v6 input.yubikey {
 	padding: 9px 25px 9px 10px;
 	width: 315px;
 	border: none;
-	background: #ffffff url('../Images/yubi_16x16.png') no-repeat 328px 9px;
+	background: #ffffff url('../Images/yubico.svg') no-repeat 328px 9px;
 	-webkit-appearance: textfield;
 	font-size: 12px;
 }
 
 #t3-login-yubikey-section input.t3-yubikey {
-	background-image: url('../Images/yubi_16x16.png');
+	background-image: url('../Images/yubico.svg');
 	background-repeat: no-repeat;
 	background-position: right 10px center;
 }
@@ -34,7 +34,7 @@ body#typo3-index-php .t3-login-yubikey-v6 input.yubikey {
 .t3yubikey {
     width: 16px;
     height: 16px;
-    background-image: url('../Images/yubi_16x16.png');
+    background-image: url('../Images/yubico.svg');
     background-repeat: no-repeat;
     display: block;
 }
