@@ -99,7 +99,8 @@ class YubikeyAuth
         $yubicoApiId = trim($this->getConfig('yubikeyClientId'));
         $yubicoApiKey = trim($this->getConfig('yubikeyClientKey'));
 
-        $url = $this->getConfig('yubikeyApiUrl') . '?id=' . $yubicoApiId . '&otp=' . $otp;
+        $url = $this->getConfig('yubikeyApiUrl') . '?id=' . $yubicoApiId . '&otp=' . $otp .
+            '&nonce=' . md5(uniqid(rand(), false));
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Enhanced TYPO3 Yubikey OTP Login Service');
