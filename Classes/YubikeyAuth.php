@@ -115,7 +115,7 @@ class YubikeyAuth
             if (!preg_match('/status=([a-zA-Z0-9_]+)/', $response, $result)) {
                 return false;
             }
-            if ($result[1] == 'OK') {
+            if ($result[1] === 'OK') {
                 return true;
             }
         }
@@ -131,7 +131,7 @@ class YubikeyAuth
      */
     public function setConfig($config, $key = '')
     {
-        if ($key != '') {
+        if ($key !== '') {
             $this->config[$key] = $config;
         } else {
             $this->config = $config;
@@ -142,11 +142,11 @@ class YubikeyAuth
      * Get configuration
      *
      * @param String $key Optional array key for config attribute
-     * @return array
+     * @return array|string
      */
     public function getConfig($key = '')
     {
-        if ($key != '') {
+        if ($key !== '') {
             $ret = $this->config[$key];
         } else {
             $ret = $this->config;
