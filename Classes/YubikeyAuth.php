@@ -14,6 +14,8 @@ namespace DERHANSEN\SfYubikey;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Provides YubiKey authentication without dependencies to PEAR packages
  */
@@ -25,16 +27,24 @@ class YubikeyAuth
     protected $config = [];
 
     /**
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
      * Constructor for this class
      *
      * @param array $extensionConfiguration
      */
     public function __construct($extensionConfiguration)
     {
+        $yubikeyApiUrls = GeneralUtility::trimExplode(';', $extensionConfiguration['yubikeyApiUrl'], true);
+
         // Set configuration
-        $this->setConfig(trim($extensionConfiguration['yubikeyApiUrl']), 'yubikeyApiUrl');
+        $this->setConfig($yubikeyApiUrls, 'yubikeyApiUrls');
         $this->setConfig(trim($extensionConfiguration['yubikeyClientId']), 'yubikeyClientId');
         $this->setConfig(trim($extensionConfiguration['yubikeyClientKey']), 'yubikeyClientKey');
+        $this->setConfig((int)$extensionConfiguration['disableSslVerification'], 'disableSslVerification');
     }
 
     /**
@@ -57,7 +67,7 @@ class YubikeyAuth
     }
 
     /**
-     * Verify HMAC-SHA1 signatur on result received from Yubico server
+     * Verify HMAC-SHA1 signature on result received from Yubico server
      *
      * @param String $response Data from Yubico
      * @param String $yubicoApiKey Shared API key
@@ -69,12 +79,14 @@ class YubikeyAuth
         // Create array from data
         foreach ($lines as $line) {
             $lineparts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('=', $line, false, 2);
-            $result[$lineparts[0]] = trim($lineparts[1]);
+            if ($lineparts[0] !== '') {
+                $result[$lineparts[0]] = trim($lineparts[1]);
+            }
         }
         // Sort array Alphabetically based on keys
         ksort($result);
         // Grab the signature sent by server, and delete
-        $signatur = $result['h'];
+        $signature = $result['h'];
         unset($result['h']);
         // Build new string to calculate hmac signature on
         $datastring = '';
@@ -82,8 +94,8 @@ class YubikeyAuth
             $datastring != '' ? $datastring .= '&' : $datastring .= '';
             $datastring .= $key . '=' . $value;
         }
-        $hmac = base64_encode(hash_hmac('sha1', $datastring, base64_decode($yubicoApiKey), true));
-        return $hmac == $signatur;
+        $hmac = base64_encode(hash_hmac('sha1', utf8_encode($datastring), base64_decode($yubicoApiKey), true));
+        return $hmac === $signature;
     }
 
     /**
@@ -98,27 +110,71 @@ class YubikeyAuth
         // Get the global API ID/KEY
         $yubicoApiId = trim($this->getConfig('yubikeyClientId'));
         $yubicoApiKey = trim($this->getConfig('yubikeyClientKey'));
+        $disableSslVerification = (int) $this->getConfig('disableSslVerification');
 
-        $url = $this->getConfig('yubikeyApiUrl') . '?id=' . $yubicoApiId . '&otp=' . $otp .
-            '&nonce=' . md5(uniqid(rand(), false));
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Enhanced TYPO3 Yubikey OTP Login Service');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $apiUrls = $this->getConfig('yubikeyApiUrls');
+        $requestParams['id'] = $yubicoApiId;
+        $requestParams['otp'] = $otp;
+        $requestParams['nonce'] = md5(uniqid(rand(), false));
+        ksort($requestParams);
+        $parameters = '';
+        foreach ($requestParams as $p => $v) {
+            $parameters .= '&' . $p . '=' . $v;
+        }
+        $parameters = ltrim($parameters, '&');
+        $signature = base64_encode(
+            hash_hmac(
+                'sha1',
+                $parameters,
+                base64_decode($yubicoApiKey),
+                true
+            )
+        );
+        $signature = preg_replace('/\+/', '%2B', $signature);
+        $parameters .= '&h=' . $signature;
+        foreach ($apiUrls as $apiUrl) {
+            $urls[] = $apiUrl . '?' . $parameters;
+        }
+        $curlOptions = [
+            CURLOPT_USERAGENT => 'Enhanced TYPO3 Yubikey OTP Login Service',
+            CURLOPT_RETURNTRANSFER => true
+        ];
         if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
-            curl_setopt($ch, CURLOPT_PROXY, $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
+            $curlOptions[CURLOPT_PROXY] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer'];
         }
-        $response = trim(curl_exec($ch));
-        curl_close($ch);
+        if ($disableSslVerification === 1) {
+            $curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
+            $curlOptions[CURLOPT_SSL_VERIFYHOST] = false;
+        }
 
-        if ($this->verifyHmac($response, $yubicoApiKey)) {
-            if (!preg_match('/status=([a-zA-Z0-9_]+)/', $response, $result)) {
-                return false;
-            }
-            if ($result[1] === 'OK') {
-                return true;
+        $mh = curl_multi_init();
+        foreach ($urls as $i => $url) {
+            $connections[$i] = curl_init($url);
+            $curlOptions[CURLOPT_URL] = $url;
+            curl_setopt_array($connections[$i], $curlOptions);
+            curl_multi_add_handle($mh, $connections[$i]);
+        }
+
+        do {
+            $status = curl_multi_exec($mh, $active);
+        } while ($status === CURLM_CALL_MULTI_PERFORM || $active);
+        foreach ($urls as $i => $url) {
+            $response = curl_multi_getcontent($connections[$i]);
+            if ($this->verifyHmac($response, $yubicoApiKey)) {
+                if (!preg_match('/status=([a-zA-Z0-9_]+)/', $response, $result)) {
+                    return false;
+                }
+                if ($result[1] === 'OK') {
+                    curl_multi_close($mh);
+                    return true;
+                } else {
+                    $this->addError($result[1]);
+                }
+            } else {
+                $this->addError('Could not verify signature');
             }
         }
+        curl_multi_close($mh);
         return false;
     }
 
@@ -152,5 +208,21 @@ class YubikeyAuth
             $ret = $this->config;
         }
         return $ret;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @param string $error
+     */
+    public function addError($error)
+    {
+        $this->errors[] = $error;
     }
 }
