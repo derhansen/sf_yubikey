@@ -20,3 +20,8 @@ $extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
 if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] = DERHANSEN\SfYubikey\LoginProvider\YubikeyLoginProvider::class;
 }
+
+if (TYPO3_MODE === 'BE') {
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][$_EXTKEY] =
+        \DERHANSEN\SfYubikey\Command\YubikeyCommandController::class;
+}

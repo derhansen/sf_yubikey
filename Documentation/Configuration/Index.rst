@@ -104,7 +104,19 @@ are four other settings that can be configured.
          string
 
    :Description:
-         The Yubico API URL to validate YubiKey OTPs. This may also be an own instance of a YubiKey validation server.
+         The Yubico API URL to validate YubiKey OTPs. This may also be an own instance of a YubiKey validation server. Separate multiple endpoints by semicolon.
 
    :Default:
-         https://api.yubico.com/wsapi/2.0/verify
+         https://api.yubico.com/wsapi/2.0/verify;https://api2.yubico.com/wsapi/2.0/verify;https://api3.yubico.com/wsapi/2.0/verify;https://api4.yubico.com/wsapi/2.0/verify;https://api5.yubico.com/wsapi/2.0/verify
+
+ - :Property:
+         disableSslVerification
+
+   :Date type:
+         boolean
+
+   :Description:
+         Whether Curl should verify SSL certificates or not (e.g. if a SSL proxy w/ custom CA is in place).
+
+   :Default:
+         False
