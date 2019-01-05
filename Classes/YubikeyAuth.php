@@ -58,7 +58,7 @@ class YubikeyAuth
         $ret = false;
         $otp = trim($yubikeyOtp);
 
-        // Verify if the OTP is valid ?
+        // Verify if the OTP is valid
         if ($this->verifyOtp($otp)) {
             $ret = true;
         }
@@ -106,7 +106,6 @@ class YubikeyAuth
      */
     public function verifyOtp($otp)
     {
-
         // Get the global API ID/KEY
         $yubicoApiId = trim($this->getConfig('yubikeyClientId'));
         $yubicoApiKey = trim($this->getConfig('yubikeyClientKey'));
@@ -132,6 +131,7 @@ class YubikeyAuth
         );
         $signature = preg_replace('/\+/', '%2B', $signature);
         $parameters .= '&h=' . $signature;
+        $urls = [];
         foreach ($apiUrls as $apiUrl) {
             $urls[] = $apiUrl . '?' . $parameters;
         }
@@ -148,6 +148,7 @@ class YubikeyAuth
         }
 
         $mh = curl_multi_init();
+        $connections = [];
         foreach ($urls as $i => $url) {
             $connections[$i] = curl_init($url);
             $curlOptions[CURLOPT_URL] = $url;
