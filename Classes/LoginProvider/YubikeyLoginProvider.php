@@ -35,6 +35,8 @@ class YubikeyLoginProvider extends UsernamePasswordLoginProvider
     public function render(StandaloneView $view, PageRenderer $pageRenderer, LoginController $loginController)
     {
         parent::render($view, $pageRenderer, $loginController);
-        $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName('EXT:sf_yubikey/Resources/Private/Templates/LoginYubikey.html'));
+        $view->setTemplatePathAndFilename(
+            GeneralUtility::getFileAbsFileName('EXT:sf_yubikey/Resources/Private/Templates/LoginYubikey.html')
+        );
     }
 }

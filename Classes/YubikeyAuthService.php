@@ -17,7 +17,7 @@ namespace DERHANSEN\SfYubikey;
 /**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
  */
-class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
+class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenticationService
 {
     /**
      * Keeps class name.
@@ -63,8 +63,10 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
     {
         $available = false;
         $this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_yubikey']);
-        $this->yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('DERHANSEN\SfYubikey\YubikeyAuth',
-            $this->extConf);
+        $this->yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            'DERHANSEN\SfYubikey\YubikeyAuth',
+            $this->extConf
+        );
         if (isset($this->extConf['yubikeyEnableBE']) && (bool)$this->extConf['yubikeyEnableBE'] && TYPO3_MODE == 'BE') {
             $available = true;
         } elseif (isset($this->extConf['yubikeyEnableFE']) && (bool)$this->extConf['yubikeyEnableFE'] && TYPO3_MODE == 'FE') {
@@ -100,8 +102,11 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
             // Get Yubikey OTP
             $yubikeyOtp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('t3-yubikey');
             $this->writeDevLog('Yubikey: ' . $yubikeyOtp);
-            $tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(chr(10),
-                $user['tx_sfyubikey_yubikey_id'], true);
+            $tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(
+                chr(10),
+                $user['tx_sfyubikey_yubikey_id'],
+                true
+            );
             $yubiKeyIds = [];
             foreach ($tempYubiKeyIds as $tempYubiKeyId) {
                 $yubiKeyIds[] = substr($tempYubiKeyId, 0, 12);
@@ -116,7 +121,11 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
 
                 if ($authResult === false) {
                     $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
-                    $this->writelog(255, 3, 3, 1,
+                    $this->writelog(
+                        255,
+                        3,
+                        3,
+                        1,
                         $errorMessage,
                         [
                             $this->authInfo['REMOTE_ADDR'],
@@ -139,7 +148,11 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
                     $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey needed, but empty Yubikey supplied!';
                     $ret = 0;
                 }
-                $this->writelog(255, 3, 3, 1,
+                $this->writelog(
+                    255,
+                    3,
+                    3,
+                    1,
                     $errorMessage,
                     [
                         $this->authInfo['REMOTE_ADDR'],
