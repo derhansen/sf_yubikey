@@ -17,7 +17,7 @@ namespace DERHANSEN\SfYubikey;
 /**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
  */
-class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenticationService
+class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
 {
     /**
      * Keeps class name.
