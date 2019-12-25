@@ -25,10 +25,10 @@
   "require": {
     "php": "^7.2",
     "ext-curl": "*",
-    "typo3/cms-core": "^9.5"
+    "typo3/cms-core": "^9.5 || 10.*@dev"
   },
   "require-dev": {
-    "typo3/testing-framework": "^4.9",
+    "typo3/testing-framework": "^4.9 || ^5.0",
     "overtrue/phplint": "^1.1"
   },
   "autoload": {
