@@ -68,7 +68,7 @@ are four other settings that can be configured.
          boolean
 
    :Description:
-         Writes debugging messages to the TYPO3 devlog
+         Writes debugging messages to a logfile in /typo3temp/var/log/sf_yubikey_{date}_{hash}.log
 
    :Default:
          False

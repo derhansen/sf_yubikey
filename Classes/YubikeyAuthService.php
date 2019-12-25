@@ -14,24 +14,20 @@ namespace DERHANSEN\SfYubikey;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
  */
-class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
+class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenticationService
 {
     /**
-     * Keeps class name.
+     * Prefix for temporary files
      *
      * @var string
      */
     public $prefixId = 'tx_sfyubikey_sv1';
-
-    /**
-     * Keeps path to this script relative to the extension directory.
-     *
-     * @var string
-     */
-    public $scriptRelPath = 'sv1/class.tx_sfyubikey_sv1.php';
 
     /**
      * Keeps extension key.
@@ -59,10 +55,11 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
      *
      * @return bool TRUE if service is available
      */
-    public function init()
+    public function init(): bool
     {
         $available = false;
-        $this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_yubikey']);
+        $this->extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)
+            ->get('sf_yubikey');
         $this->yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             'DERHANSEN\SfYubikey\YubikeyAuth',
             $this->extConf
@@ -93,15 +90,19 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
 
         // Check if user Yubikey-Authentication is enabled for this user
         if (!$user['tx_sfyubikey_yubikey_enable']) {
-            $this->writeDevLog(TYPO3_MODE . ' login using TYPO3 password authentication for user: ' . $user['username']);
+            $this->logger->debug(
+                TYPO3_MODE . ' login using TYPO3 password authentication for user: ' . $user['username']
+            );
             // Continue with TYPO3 authentication
             $ret = 100;
         } else {
-            $this->writeDevLog(TYPO3_MODE . ' login using Yubikey authentication for user: ' . $user['username']);
+            $this->logger->debug(
+                TYPO3_MODE . ' login using Yubikey authentication for user: ' . $user['username']
+            );
 
             // Get Yubikey OTP
             $yubikeyOtp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('t3-yubikey');
-            $this->writeDevLog('Yubikey: ' . $yubikeyOtp);
+            $this->logger->debug('Yubikey: ' . $yubikeyOtp);
             $tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(
                 chr(10),
                 $user['tx_sfyubikey_yubikey_id'],
@@ -114,7 +115,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
             // Check, if Yubikey-ID does match with users Yubikey-ID
             if (in_array(substr($yubikeyOtp, 0, 12), $yubiKeyIds)) {
                 $clientId = $this->extConf['yubikeyClientId'];
-                $this->writeDevLog('Yubikey config - ClientId: ' . $clientId);
+                $this->logger->debug('Yubikey config - ClientId: ' . $clientId);
 
                 // Check Yubikey OTP
                 $authResult = $this->yubiKeyAuth->checkOtp($yubikeyOtp);
@@ -163,18 +164,5 @@ class YubikeyAuthService extends \TYPO3\CMS\Sv\AbstractAuthenticationService
             }
         }
         return $ret;
-    }
-
-    /**
-     * Writes to devlog if enabled
-     *
-     * @param string $message Message for devlog
-     * @return void
-     */
-    private function writeDevLog($message)
-    {
-        if ($this->extConf['devlog']) {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($message, 'tx_sfyubikey_sv1', 0);
-        }
     }
 }

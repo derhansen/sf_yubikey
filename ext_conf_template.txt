@@ -16,5 +16,5 @@ yubikeyApiUrl = https://api.yubico.com/wsapi/2.0/verify;https://api2.yubico.com/
 # cat=basic/enable; type=boolean; label=Disable SSL Verification: Toggle whether Curl should verify SSL certificates or not (e.g. if a SSL proxy w/ custom CA is in place)
 disableSslVerification = 0
 
-# cat=basic/enable; type=boolean; label=Devlog: Write Debug Information to devlog
+# cat=basic/enable; type=boolean; label=Devlog: Write Debug Information to a logfile
 devlog = 0

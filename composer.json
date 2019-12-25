@@ -20,14 +20,16 @@
     "two-factor authentication"
   ],
   "license": [
-    "GPL-2.0+"
+    "GPL-2.0-or-later"
   ],
   "require": {
-    "typo3/cms-core": "^8.7 || ^9.5",
-    "ext-curl": "*"
+    "php": "^7.2",
+    "ext-curl": "*",
+    "typo3/cms-core": "^9.5"
   },
   "require-dev": {
-    "nimut/testing-framework": "3.x-dev || 4.x-dev"
+    "typo3/testing-framework": "^4.9",
+    "overtrue/phplint": "^1.1"
   },
   "autoload": {
     "psr-4": {
@@ -50,6 +52,12 @@
     "post-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/sf_yubikey ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/sf_yubikey"
+    ],
+    "test:php:lint": [
+      "phplint"
+    ],
+    "test:php:unit": [
+      "phpunit"
     ]
   },
   "extra": {
