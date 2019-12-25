@@ -30,11 +30,6 @@ call_user_func(function () {
             DERHANSEN\SfYubikey\LoginProvider\YubikeyLoginProvider::class;
     }
 
-    if (TYPO3_MODE === 'BE') {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['sf_yubikey'] =
-            \DERHANSEN\SfYubikey\Command\YubikeyCommandController::class;
-    }
-
     // Enable logging depending on extension settings
     if ($extConf['devlog']) {
         $logLevel = \TYPO3\CMS\Core\Log\LogLevel::DEBUG;
