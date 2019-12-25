@@ -61,7 +61,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
         $this->extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)
             ->get('sf_yubikey');
         /** @var YubikeyAuth $yubiKeyAuth */
-        $yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        $this->yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             'DERHANSEN\SfYubikey\YubikeyAuth',
             $this->extConf
         );
