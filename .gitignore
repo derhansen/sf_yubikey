@@ -3,4 +3,6 @@
 atlassian-ide-plugin.xml
 .Build
 composer.lock
+.phplint.cache
+.phpunit.result.cache
 var/

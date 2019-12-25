@@ -14,13 +14,16 @@ namespace DERHANSEN\SfYubikey\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use DERHANSEN\SfYubikey\YubikeyAuthService;
+use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Testcase for class DERHANSEN\SfYubikey\YubikeyAuthService
  */
 class YubikeyAuthServiceTest extends UnitTestCase
 {
+    protected $resetSingletonInstances = true;
 
     /**
      * Data provider for authUserReturnsExpectedReturnCode
@@ -31,13 +34,17 @@ class YubikeyAuthServiceTest extends UnitTestCase
     {
         return [
             'YubiKey not configured' => [
-                [],
+                [
+                    'username' => 'testuser',
+                    'tx_sfyubikey_yubikey_enable' => false
+                ],
                 '',
                 null,
                 100
             ],
             'YubiKey not enabled' => [
                 [
+                    'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => false
                 ],
                 '',
@@ -46,6 +53,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
             ],
             'No YubiKey given for YubiKey enabled user' => [
                 [
+                    'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001'
                 ],
@@ -55,6 +63,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
             ],
             'Given YubiKey does not belong to user' => [
                 [
+                    'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001'
                 ],
@@ -64,6 +73,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
             ],
             'Given YubiKey could not be validated' => [
                 [
+                    'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars'
                 ],
@@ -73,6 +83,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
             ],
             'Given YubiKey validated successfully' => [
                 [
+                    'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars'
                 ],
@@ -82,6 +93,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
             ],
             'Given YubiKey validated successfully for user having multiple yubikeys' => [
                 [
+                    'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars' . chr(10) . 'yubikey00002ignoredchars'
                 ],
@@ -99,22 +111,40 @@ class YubikeyAuthServiceTest extends UnitTestCase
      */
     public function authUserReturnsExpectedReturnCode($userData, $yubikeyOtp, $checkOtpResult, $expectedReturnCode)
     {
-        /** @var \DERHANSEN\SfYubikey\YubikeyAuthService $authenticationService */
-        $authenticationService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\DERHANSEN\SfYubikey\YubikeyAuthService::class);
+        /** @var \DERHANSEN\SfYubikey\YubikeyAuthService $mock */
+        $mock = $this->getMockBuilder(YubikeyAuthService::class)
+            ->setMethods(['dummy'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mock->authInfo = [
+            'REMOTE_ADDR' => '127.0.0.1',
+            'REMOTE_HOST' => 'localhost'
+        ];
+        $mock->login = [
+            'uname' => $userData['username']
+        ];
+
+        $mockLogger = $this->getMockBuilder(Logger::class)
+            ->setMethods(['dummy'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mock->setLogger($mockLogger);
 
         // Set YubiKey OTP GET variable if given
         if ($yubikeyOtp != '') {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::_GETset(['t3-yubikey' => $yubikeyOtp]);
+            $_GET = ['t3-yubikey' => $yubikeyOtp];
         }
 
         // Set OTP validation result if given
         if ($checkOtpResult !== null) {
-            $yubikeyAuth = $this->getMockBuilder(\DERHANSEN\SfYubikey\YubikeyAuth::class)->disableOriginalConstructor()->getMock();
-            $yubikeyAuth->expects($this->once())->method('checkOtp')->with($yubikeyOtp)->will($this->returnValue($checkOtpResult));
-            $this->inject($authenticationService, 'yubiKeyAuth', $yubikeyAuth);
+            $yubikeyAuth = $this->getMockBuilder(\DERHANSEN\SfYubikey\YubikeyAuth::class)
+                ->disableOriginalConstructor()->getMock();
+            $yubikeyAuth->expects($this->once())->method('checkOtp')->with($yubikeyOtp)
+                ->will($this->returnValue($checkOtpResult));
+            $this->inject($mock, 'yubiKeyAuth', $yubikeyAuth);
         }
 
-        $retCode = $authenticationService->authUser($userData);
-        $this->assertEquals($retCode, $expectedReturnCode);
+        $retCode = $mock->authUser($userData);
+        $this->assertEquals($expectedReturnCode, $retCode);
     }
 }
