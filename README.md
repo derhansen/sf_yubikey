@@ -1,7 +1,7 @@
 YubiKey two-factor authentication for TYPO3
 ===========================================
 
-[![Build Status](https://github.com/derhansen/sf_yubikey/workflows/CI/badge.svg?branch=typo3-9.5)](https://github.com/derhansen/sf_yubikey/actions)
+[![Build Status](https://github.com/derhansen/sf_yubikey/workflows/CI/badge.svg?branch=master)](https://github.com/derhansen/sf_yubikey/actions)
 [![StyleCI](https://styleci.io/repos/7937354/shield?branch=master)](https://styleci.io/repos/7937354)
 
 ## What is it?
