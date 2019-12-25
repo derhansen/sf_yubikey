@@ -6,18 +6,9 @@ $EM_CONF[$_EXTKEY] = [
     'category' => 'services',
     'author' => 'Torben Hansen',
     'author_email' => 'derhansen@gmail.com',
-    'shy' => '',
-    'dependencies' => '',
-    'conflicts' => '',
-    'priority' => '',
-    'module' => '',
     'state' => 'stable',
-    'internal' => '',
     'uploadfolder' => 0,
-    'createDirs' => '',
-    'modify_tables' => '',
     'clearCacheOnLoad' => 1,
-    'lockType' => '',
     'version' => '3.0.0-dev',
     'constraints' => [
         'depends' => [
@@ -27,5 +18,4 @@ $EM_CONF[$_EXTKEY] = [
         'conflicts' => [],
         'suggests' => [],
     ],
-    'suggests' => [],
 ];
