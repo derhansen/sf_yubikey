@@ -136,6 +136,13 @@ class YubikeyAuthServiceTest extends UnitTestCase
             $_GET = ['t3-yubikey' => $yubikeyOtp];
         }
 
+        $extConf = [
+            'yubikeyEnableBE' => 1,
+            'yubikeyEnableFE' => 0,
+            'yubikeyClientId' => 'test',
+            'yubikeyClientKey' => 'test'
+        ];
+
         // Set OTP validation result if given
         if ($checkOtpResult !== null) {
             /** @var YubikeyAuth $mockYubikeyAuth */
@@ -145,9 +152,12 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ->will($this->returnValue($checkOtpResult));
 
             $objectReflection = new \ReflectionObject($mock);
-            $property = $objectReflection->getProperty('yubiKeyAuth');
-            $property->setAccessible(true);
-            $property->setValue($mock, $mockYubikeyAuth);
+            $yubiKeyAuthProperty = $objectReflection->getProperty('yubiKeyAuth');
+            $yubiKeyAuthProperty->setAccessible(true);
+            $yubiKeyAuthProperty->setValue($mock, $mockYubikeyAuth);
+            $extConfProperty = $objectReflection->getProperty('extConf');
+            $extConfProperty->setAccessible(true);
+            $extConfProperty->setValue($mock, $extConf);
         }
 
         $retCode = $mock->authUser($userData);
