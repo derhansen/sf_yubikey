@@ -119,7 +119,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
             }
             // Check, if Yubikey-ID does match with users Yubikey-ID
             if (in_array(substr($yubikeyOtp, 0, 12), $yubiKeyIds)) {
-                $clientId = $this->extConf['yubikeyClientId'];
+                $clientId = $this->extConf['yubikeyClientId'] ?? 'none';
                 $this->logger->debug('Yubikey config - ClientId: ' . $clientId);
 
                 // Check Yubikey OTP
