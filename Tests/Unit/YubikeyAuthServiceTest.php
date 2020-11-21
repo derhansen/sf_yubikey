@@ -41,6 +41,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ],
                 '',
                 null,
+                'login',
                 100
             ],
             'YubiKey not enabled' => [
@@ -50,6 +51,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ],
                 '',
                 null,
+                'login',
                 100
             ],
             'No YubiKey given for YubiKey enabled user' => [
@@ -60,6 +62,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ],
                 '',
                 null,
+                'login',
                 0
             ],
             'Given YubiKey does not belong to user' => [
@@ -70,6 +73,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ],
                 'yubikey00000someOTPvalue',
                 null,
+                'login',
                 0
             ],
             'Given YubiKey could not be validated' => [
@@ -80,6 +84,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ],
                 'yubikey00001someOTPvalue',
                 false,
+                'login',
                 0
             ],
             'Given YubiKey validated successfully' => [
@@ -90,6 +95,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ],
                 'yubikey00001someOTPvalue',
                 true,
+                'login',
                 100
             ],
             'Given YubiKey validated successfully for user having multiple yubikeys' => [
@@ -100,8 +106,20 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 ],
                 'yubikey00002someOTPvalue',
                 true,
+                'login',
                 100
-            ]
+            ],
+            'No YubiKey given, but ststus != login' => [
+                [
+                    'username' => 'testuser',
+                    'tx_sfyubikey_yubikey_enable' => true,
+                    'tx_sfyubikey_yubikey_id' => 'yubikey00001'
+                ],
+                '',
+                null,
+                'other-status',
+                100
+            ],
         ];
     }
 
@@ -110,8 +128,13 @@ class YubikeyAuthServiceTest extends UnitTestCase
      * @dataProvider authUserDataProvider
      * @return void
      */
-    public function authUserReturnsExpectedReturnCode($userData, $yubikeyOtp, $checkOtpResult, $expectedReturnCode)
-    {
+    public function authUserReturnsExpectedReturnCode(
+        $userData,
+        $yubikeyOtp,
+        $checkOtpResult,
+        $status,
+        $expectedReturnCode
+    ) {
         /** @var \DERHANSEN\SfYubikey\YubikeyAuthService $mock */
         $mock = $this->getMockBuilder(YubikeyAuthService::class)
             ->setMethods(['dummy'])
@@ -122,7 +145,8 @@ class YubikeyAuthServiceTest extends UnitTestCase
             'REMOTE_HOST' => 'localhost'
         ];
         $mock->login = [
-            'uname' => $userData['username']
+            'uname' => $userData['username'],
+            'status' => $status
         ];
 
         $mockLogger = $this->getMockBuilder(Logger::class)
