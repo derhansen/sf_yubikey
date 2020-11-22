@@ -89,6 +89,10 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
         // 0 means authentication failure
         $ret = 0;
 
+        // only handle Yubikey for actual login requests
+        if (empty($this->login['status']) || $this->login['status'] !== 'login') {
+            return 100;
+        }
         // Check if user Yubikey-Authentication is enabled for this user
         if (!$user['tx_sfyubikey_yubikey_enable']) {
             $this->logger->debug(
@@ -115,7 +119,7 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
             }
             // Check, if Yubikey-ID does match with users Yubikey-ID
             if (in_array(substr($yubikeyOtp, 0, 12), $yubiKeyIds)) {
-                $clientId = $this->extConf['yubikeyClientId'];
+                $clientId = $this->extConf['yubikeyClientId'] ?? 'none';
                 $this->logger->debug('Yubikey config - ClientId: ' . $clientId);
 
                 // Check Yubikey OTP

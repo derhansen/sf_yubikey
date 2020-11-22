@@ -2,7 +2,7 @@ YubiKey two-factor authentication for TYPO3
 ===========================================
 
 [![Build Status](https://github.com/derhansen/sf_yubikey/workflows/CI/badge.svg?branch=master)](https://github.com/derhansen/sf_yubikey/actions)
-[![StyleCI](https://styleci.io/repos/7937354/shield?branch=master)](https://styleci.io/repos/7937354)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 ## What is it?
 
