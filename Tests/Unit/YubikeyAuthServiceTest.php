@@ -1,5 +1,5 @@
 <?php
-namespace DERHANSEN\SfYubikey\Tests\Unit;
+namespace Derhansen\SfYubikey\Tests\Unit;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,13 +14,13 @@ namespace DERHANSEN\SfYubikey\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
-use DERHANSEN\SfYubikey\YubikeyAuth;
-use DERHANSEN\SfYubikey\YubikeyAuthService;
+use Derhansen\SfYubikey\YubikeyAuth;
+use Derhansen\SfYubikey\YubikeyAuthService;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Testcase for class DERHANSEN\SfYubikey\YubikeyAuthService
+ * Testcase for class Derhansen\SfYubikey\YubikeyAuthService
  */
 class YubikeyAuthServiceTest extends UnitTestCase
 {
@@ -135,7 +135,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
         $status,
         $expectedReturnCode
     ) {
-        /** @var \DERHANSEN\SfYubikey\YubikeyAuthService $mock */
+        /** @var \Derhansen\SfYubikey\YubikeyAuthService $mock */
         $mock = $this->getMockBuilder(YubikeyAuthService::class)
             ->setMethods(['dummy'])
             ->disableOriginalConstructor()
@@ -170,7 +170,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
         // Set OTP validation result if given
         if ($checkOtpResult !== null) {
             /** @var YubikeyAuth $mockYubikeyAuth */
-            $mockYubikeyAuth = $this->getMockBuilder(\DERHANSEN\SfYubikey\YubikeyAuth::class)
+            $mockYubikeyAuth = $this->getMockBuilder(\Derhansen\SfYubikey\YubikeyAuth::class)
                 ->disableOriginalConstructor()->getMock();
             $mockYubikeyAuth->expects($this->once())->method('checkOtp')->with($yubikeyOtp)
                 ->will($this->returnValue($checkOtpResult));

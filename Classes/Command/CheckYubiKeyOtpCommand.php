@@ -1,8 +1,8 @@
 <?php
-namespace DERHANSEN\SfYubikey\Command;
+namespace Derhansen\SfYubikey\Command;
 
 /*
- * This file is part of the package DERHANSEN/SfYubikey.
+ * This file is part of the package Derhansen/SfYubikey.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
@@ -50,7 +50,7 @@ class CheckYubiKeyOtpCommand extends Command
         $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)
             ->get('sf_yubikey');
         $yubikeyAuth = GeneralUtility::makeInstance(
-            \DERHANSEN\SfYubikey\YubikeyAuth::class,
+            \Derhansen\SfYubikey\YubikeyAuth::class,
             $extensionConfiguration
         );
 

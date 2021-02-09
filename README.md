@@ -4,6 +4,8 @@ YubiKey two-factor authentication for TYPO3
 [![Build Status](https://github.com/derhansen/sf_yubikey/workflows/CI/badge.svg?branch=master)](https://github.com/derhansen/sf_yubikey/actions)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
+*** This version is still in heavy development - DO NOT USE IN PRODUCTION ***
+
 ## What is it?
 
 This extension is an authentication service for TYPO3 which extends the frontend and backend login process by strong

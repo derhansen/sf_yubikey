@@ -1,5 +1,5 @@
 <?php
-namespace DERHANSEN\SfYubikey;
+namespace Derhansen\SfYubikey\Service;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -19,7 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Provides YubiKey authentication without dependencies to PEAR packages
  */
-class YubikeyAuth
+class YubikeyAuthService
 {
     /**
      * @var array

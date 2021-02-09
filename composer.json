@@ -23,27 +23,27 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
     "ext-curl": "*",
-    "typo3/cms-core": "^9.5.5 || ^10.4"
+    "typo3/cms-core": "dev-master"
   },
   "require-dev": {
-    "typo3/cms-backend": "^9.5.5 || ^10.4",
-    "typo3/cms-frontend": "^9.5.5 || ^10.4",
-    "typo3/cms-recordlist": "^9.5.5 || ^10.4",
-    "typo3/cms-extbase": "^9.5.5 || ^10.4",
-    "typo3/cms-fluid": "^9.5.5 || ^10.4",
+    "typo3/cms-backend": "dev-master",
+    "typo3/cms-frontend": "dev-master",
+    "typo3/cms-recordlist": "dev-master",
+    "typo3/cms-extbase": "dev-master",
+    "typo3/cms-fluid": "dev-master",
     "typo3/testing-framework": "^4.9 || ^6.1",
     "overtrue/phplint": "^1.1"
   },
   "autoload": {
     "psr-4": {
-      "DERHANSEN\\SfYubikey\\": "Classes"
+      "Derhansen\\SfYubikey\\": "Classes"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "DERHANSEN\\SfYubikey\\": "Tests"
+      "Derhansen\\SfYubikey\\": "Tests"
     }
   },
   "replace": {
