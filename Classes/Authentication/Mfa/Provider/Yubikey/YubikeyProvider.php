@@ -39,6 +39,8 @@ class YubikeyProvider implements MfaProviderInterface
         $extConfig = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
         $yubiKeyAuthService = GeneralUtility::makeInstance(YubikeyAuthService::class, $extConfig);
 
+        // @todo: Check if given YubiKey is configured for user (see https://github.com/derhansen/sf_yubikey/blob/master/Classes/YubikeyAuthService.php#L111)
+
         $verified = $yubiKeyAuthService->checkOtp($this->getYubikey($request));
         if (!$verified) {
             $attempts = $propertyManager->getProperty('attempts', 0);
