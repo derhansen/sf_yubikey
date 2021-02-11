@@ -12,3 +12,11 @@ services:
             - name: 'console.command'
               command: 'sf_yubikey:checkyubikeyotp'
               schedulable: true
+
+    Derhansen\SfYubikey\Authentication\Mfa\Provider\Yubikey\YubikeyProvider:
+        tags:
+            - name: mfa.provider
+              identifier: 'yubikey'
+              title: 'YubiKey Authentication'
+              description: 'Authentication for TYPO3 backend and frontend login using YubiKey OTP two-factor authentication.'
+              icon: 'ext-sfyubikey-icon'
