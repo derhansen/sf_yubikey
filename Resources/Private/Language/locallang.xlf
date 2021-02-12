@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2020-02-11T11:47:05Z" product-name="sf_yubikey">
+		<header/>
+		<body>
+			<trans-unit id="yubikey.title">
+				<source>YubiKey Authentication</source>
+			</trans-unit>
+			<trans-unit id="yubikey.description">
+				<source>Authentication for TYPO3 backend and frontend login using YubiKey OTP two-factor authentication.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
