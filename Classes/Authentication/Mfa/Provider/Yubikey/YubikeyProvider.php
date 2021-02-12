@@ -3,10 +3,9 @@ namespace Derhansen\SfYubikey\Authentication\Mfa\Provider\Yubikey;
 
 use Derhansen\SfYubikey\Service\YubikeyAuthService;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaContentType;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderInterface;
-use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderManifestInterface;
+use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderPropertyManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -22,20 +21,19 @@ class YubikeyProvider implements MfaProviderInterface
         return $this->getYubikeys($request) !== '' || $this->getYubikey($request) !== '';
     }
 
-    public function isActive(AbstractUserAuthentication $user): bool
+    public function isActive(MfaProviderPropertyManager $propertyManager): bool
     {
-        return (bool)$user->getMfaProviderPropertyManager($this->getIdentifier())->getProperty('active');
+        return (bool)$propertyManager->getProperty('active');
     }
 
-    public function isLocked(AbstractUserAuthentication $user): bool
+    public function isLocked(MfaProviderPropertyManager $propertyManager): bool
     {
-        $attempts = (int)$user->getMfaProviderPropertyManager($this->getIdentifier())->getProperty('attempts', 0);
+        $attempts = (int)$propertyManager->getProperty('attempts', 0);
         return $attempts >= self::MAX_ATTEMPTS;
     }
 
-    public function verify(ServerRequestInterface $request, AbstractUserAuthentication $user): bool
+    public function verify(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
-        $propertyManager = $user->getMfaProviderPropertyManager($this->getIdentifier());
         $extConfig = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
         $yubiKeyAuthService = GeneralUtility::makeInstance(YubikeyAuthService::class, $extConfig);
 
@@ -54,27 +52,27 @@ class YubikeyProvider implements MfaProviderInterface
         return $verified;
     }
 
-    public function renderContent(ServerRequestInterface $request, AbstractUserAuthentication $user, string $type): string
+    public function renderContent(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager, string $type): string
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplateRootPaths(['EXT:sf_yubikey/Resources/Private/Templates/']);
         switch ($type) {
             case MfaContentType::SETUP:
-                $this->prepareSetupView($view, $user);
+                $this->prepareSetupView($view, $propertyManager);
                 break;
             case MfaContentType::EDIT:
-                $this->prepareEditView($view, $user);
+                $this->prepareEditView($view, $propertyManager);
                 break;
             case MfaContentType::AUTH:
-                $this->prepareAuthView($view, $user);
+                $this->prepareAuthView($view, $propertyManager);
                 break;
         }
         return $view->assign('provider', $this)->render();
     }
 
-    public function activate(ServerRequestInterface $request, AbstractUserAuthentication $user): bool
+    public function activate(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
-        if ($this->isActive($user)) {
+        if ($this->isActive($propertyManager)) {
             // Return since the user already activated this provider
             return true;
         }
@@ -87,7 +85,6 @@ class YubikeyProvider implements MfaProviderInterface
         // @todo Verify YubiKey (I think only verify if this all entries are valid keys - no external check)
 
         $properties = ['yubikeys' => $this->getYubikeys($request), 'active' => true];
-        $propertyManager = $user->getMfaProviderPropertyManager($this->getIdentifier());
 
         // Usually there should be no entry if the provider is not activated, but to prevent the
         // provider from being unable to activate again, we update the existing entry in such case.
@@ -96,59 +93,50 @@ class YubikeyProvider implements MfaProviderInterface
             : $propertyManager->createProviderEntry($properties);
     }
 
-    public function deactivate(ServerRequestInterface $request, AbstractUserAuthentication $user): bool
+    public function deactivate(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
-        if (!$this->isActive($user)) {
+        if (!$this->isActive($propertyManager)) {
             // Return since this provider is not activated
             return false;
         }
 
         // Delete the provider entry
-        return $user->getMfaProviderPropertyManager($this->getIdentifier())->deleteProviderEntry();
+        return $propertyManager->deleteProviderEntry();
     }
 
-    public function unlock(ServerRequestInterface $request, AbstractUserAuthentication $user): bool
+    public function unlock(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
-        if (!$this->isLocked($user)) {
+        if (!$this->isLocked($propertyManager)) {
             // Return since this provider is not locked
             return false;
         }
 
         // Reset the attempts
-        return $user->getMfaProviderPropertyManager($this->getIdentifier())->updateProperties(['attempts' => 0]);
+        return $propertyManager->updateProperties(['attempts' => 0]);
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param AbstractUserAuthentication $user
+     * @param MfaProviderPropertyManager $propertyManager
      * @return bool
      */
-    public function update(ServerRequestInterface $request, AbstractUserAuthentication $user): bool
+    public function update(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
         $yubikeys = (string)($request->getQueryParams()['yubikeys'] ?? $request->getParsedBody()['yubikeys'] ?? '');
         if ($yubikeys !== '') {
-            return $user->getMfaProviderPropertyManager($this->getIdentifier())
-                ->updateProperties(['yubikeys' => $yubikeys]);
+            return $propertyManager->updateProperties(['yubikeys' => $yubikeys]);
         }
 
         // Provider properties successfully updated
         return true;
     }
-    public function getIdentifier(): string
-    {
-        return 'yubikey';
-    }
 
-    public function getManifest(): MfaProviderManifestInterface
-    {
-        return GeneralUtility::makeInstance(YubikeyProviderManifest::class);
-    }
 
     /**
      * @param ViewInterface $view
-     * @param AbstractUserAuthentication $user
+     * @param MfaProviderPropertyManager $propertyManager
      */
-    protected function prepareSetupView(ViewInterface $view, AbstractUserAuthentication $user): void
+    protected function prepareSetupView(ViewInterface $view, MfaProviderPropertyManager $propertyManager): void
     {
         // @todo Check Extension Settings for Yubico Client ID and Client Key and disable textarea if not available
         $view->setTemplate('Setup');
@@ -156,11 +144,10 @@ class YubikeyProvider implements MfaProviderInterface
 
     /**
      * @param ViewInterface $view
-     * @param AbstractUserAuthentication $user
+     * @param MfaProviderPropertyManager $propertyManager
      */
-    protected function prepareEditView(ViewInterface $view, AbstractUserAuthentication $user): void
+    protected function prepareEditView(ViewInterface $view, MfaProviderPropertyManager $propertyManager): void
     {
-        $propertyManager = $user->getMfaProviderPropertyManager($this->getIdentifier());
         $view->setTemplate('Edit');
         // @todo Check Extension Settings for Yubico Client ID and Client Key and disable textarea if not available
         $view->assignMultiple([
@@ -170,12 +157,12 @@ class YubikeyProvider implements MfaProviderInterface
 
     /**
      * @param ViewInterface $view
-     * @param AbstractUserAuthentication $user
+     * @param MfaProviderPropertyManager $propertyManager
      */
-    protected function prepareAuthView(ViewInterface $view, AbstractUserAuthentication $user): void
+    protected function prepareAuthView(ViewInterface $view, MfaProviderPropertyManager $propertyManager): void
     {
         $view->setTemplate('Auth');
-        $view->assign('isLocked', $this->isLocked($user));
+        $view->assign('isLocked', $this->isLocked($propertyManager));
     }
 
     /**
