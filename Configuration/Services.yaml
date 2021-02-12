@@ -17,6 +17,6 @@ services:
         tags:
             - name: mfa.provider
               identifier: 'yubikey'
-              title: 'YubiKey Authentication'
-              description: 'Authentication for TYPO3 backend and frontend login using YubiKey OTP two-factor authentication.'
+              title: 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.title'
+              description: 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.description'
               icon: 'ext-sfyubikey-icon'

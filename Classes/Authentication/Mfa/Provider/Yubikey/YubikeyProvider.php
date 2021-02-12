@@ -2,12 +2,14 @@
 namespace Derhansen\SfYubikey\Authentication\Mfa\Provider\Yubikey;
 
 use Derhansen\SfYubikey\Service\YubikeyAuthService;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaContentType;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderInterface;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderPropertyManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -52,7 +54,7 @@ class YubikeyProvider implements MfaProviderInterface
         return $verified;
     }
 
-    public function renderContent(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager, string $type): string
+    public function renderContent(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager, string $type): ResponseInterface
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplateRootPaths(['EXT:sf_yubikey/Resources/Private/Templates/']);
@@ -67,7 +69,7 @@ class YubikeyProvider implements MfaProviderInterface
                 $this->prepareAuthView($view, $propertyManager);
                 break;
         }
-        return $view->assign('provider', $this)->render();
+        return new HtmlResponse($view->assign('provider', $this)->render());
     }
 
     public function activate(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
