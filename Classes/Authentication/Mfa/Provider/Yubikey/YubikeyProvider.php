@@ -1,16 +1,22 @@
 <?php
+
 namespace Derhansen\SfYubikey\Authentication\Mfa\Provider\Yubikey;
 
+/*
+ * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
 use Derhansen\SfYubikey\Service\YubikeyAuthService;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaContentType;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderInterface;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderPropertyManager;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -44,12 +50,11 @@ class YubikeyProvider implements MfaProviderInterface
 
     public function verify(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
-        $extConfig = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
-        $yubiKeyAuthService = GeneralUtility::makeInstance(YubikeyAuthService::class, $extConfig);
+        $yubiKeyAuthService = GeneralUtility::makeInstance(YubikeyAuthService::class);
 
         // @todo: Check if given YubiKey is configured for user (see https://github.com/derhansen/sf_yubikey/blob/master/Classes/YubikeyAuthService.php#L111)
 
-        $verified = $yubiKeyAuthService->checkOtp($this->getYubikey($request));
+        $verified = $yubiKeyAuthService->verifyOtp($this->getYubikey($request));
         if (!$verified) {
             $attempts = $propertyManager->getProperty('attempts', 0);
             $propertyManager->updateProperties(['attempts' => ++$attempts]);
@@ -142,7 +147,6 @@ class YubikeyProvider implements MfaProviderInterface
         // Provider properties successfully updated
         return true;
     }
-
 
     /**
      * @param ViewInterface $view

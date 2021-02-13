@@ -1,20 +1,11 @@
-# cat=basic/enable; type=boolean; label=Enable YubiKey authentication for TYPO3 backend users
-yubikeyEnableBE = 1
-
-# cat=basic/enable; type=boolean; label=Enable YubiKey authentication for TYPO3 frontent users
-yubikeyEnableFE = 0
-
 # cat=basic; type=string; label=Yubico Client ID: Get a Client ID and Client Key at https://upgrade.yubico.com/getapikey/
 yubikeyClientId = 
 
 # cat=basic; type=string; label=Yubico Client Key: 
 yubikeyClientKey =
 
-# cat=basic; type=string; label=Yubico API Url: Separate multiple endpoints by semicolon
-yubikeyApiUrl = https://api.yubico.com/wsapi/2.0/verify;https://api2.yubico.com/wsapi/2.0/verify;https://api3.yubico.com/wsapi/2.0/verify;https://api4.yubico.com/wsapi/2.0/verify;https://api5.yubico.com/wsapi/2.0/verify
+# cat=basic; type=string; label=Yubico API Urls: Separate multiple endpoints by semicolon
+yubikeyApiUrls = https://api.yubico.com/wsapi/2.0/verify;https://api2.yubico.com/wsapi/2.0/verify;https://api3.yubico.com/wsapi/2.0/verify;https://api4.yubico.com/wsapi/2.0/verify;https://api5.yubico.com/wsapi/2.0/verify
 
 # cat=basic/enable; type=boolean; label=Disable SSL Verification: Toggle whether Curl should verify SSL certificates or not (e.g. if a SSL proxy w/ custom CA is in place)
 disableSslVerification = 0
-
-# cat=basic/enable; type=boolean; label=Devlog: Write Debug Information to a logfile
-devlog = 0

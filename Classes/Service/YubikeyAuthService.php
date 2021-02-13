@@ -1,120 +1,96 @@
 <?php
+
 namespace Derhansen\SfYubikey\Service;
 
 /*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
+ * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Provides YubiKey authentication without dependencies to PEAR packages
+ * Provides YubiKey authentication using the yubico YubiCloud
  */
 class YubikeyAuthService
 {
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $errors = [];
+    protected string $yubikeyClientId = '';
+    protected string $yubikeyClientKey = '';
+    protected array $yubikeyApiUrl = [];
+    protected bool $disableSslVerification = false;
+    protected bool $initialized = false;
 
-    /**
-     * @var array
-     */
-    protected $errors = [];
-
-    /**
-     * Constructor for this class
-     *
-     * @param array $extensionConfiguration
-     */
-    public function __construct($extensionConfiguration)
+    public function __construct()
     {
-        $yubikeyApiUrls = GeneralUtility::trimExplode(';', $extensionConfiguration['yubikeyApiUrl'], true);
+        $extConfig = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
 
-        // Set configuration
-        $this->setConfig($yubikeyApiUrls, 'yubikeyApiUrls');
-        $this->setConfig(trim($extensionConfiguration['yubikeyClientId']), 'yubikeyClientId');
-        $this->setConfig(trim($extensionConfiguration['yubikeyClientKey']), 'yubikeyClientKey');
-        $this->setConfig((int)$extensionConfiguration['disableSslVerification'], 'disableSslVerification');
-    }
+        $this->yubikeyClientId = trim($extConfig['yubikeyClientId']);
+        $this->yubikeyClientKey = trim($extConfig['yubikeyClientKey']);
+        $this->yubikeyApiUrl = GeneralUtility::trimExplode(';', $extConfig['yubikeyApiUrls'], true);
+        $this->disableSslVerification = (bool)$extConfig['disableSslVerification'];
 
-    /**
-     * Do OTP check if user has been setup to do so.
-     *
-     * @param String $yubikeyOtp
-     * @return Boolean
-     */
-    public function checkOtp($yubikeyOtp)
-    {
-        $ret = false;
-        $otp = trim($yubikeyOtp);
-
-        // Verify if the OTP is valid
-        if ($this->verifyOtp($otp)) {
-            $ret = true;
-        }
-
-        return $ret;
+        $this->initialized = $this->yubikeyClientId !== '' && $this->yubikeyClientKey !== '' &&
+            !empty($this->yubikeyApiUrl);
     }
 
     /**
      * Verify HMAC-SHA1 signature on result received from Yubico server
      *
-     * @param String $response Data from Yubico
-     * @param String $yubicoApiKey Shared API key
-     * @return Boolean Does the signature match ?
+     * @param string $response
+     * @param string $yubicoClientKey
+     * @return bool
      */
-    public function verifyHmac($response, $yubicoApiKey)
+    public function verifyHmac(string $response, string $yubicoClientKey): bool
     {
-        $lines = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(chr(10), $response);
+        $lines = GeneralUtility::trimExplode(chr(10), $response);
+        $result = [];
+
         // Create array from data
         foreach ($lines as $line) {
-            $lineparts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('=', $line, false, 2);
+            $lineparts = GeneralUtility::trimExplode('=', $line, false, 2);
             if ($lineparts[0] !== '') {
                 $result[$lineparts[0]] = trim($lineparts[1]);
             }
         }
+
         // Sort array Alphabetically based on keys
         ksort($result);
+
         // Grab the signature sent by server, and delete
         $signature = $result['h'];
         unset($result['h']);
+
         // Build new string to calculate hmac signature on
         $datastring = '';
         foreach ($result as $key => $value) {
-            $datastring != '' ? $datastring .= '&' : $datastring .= '';
+            $datastring !== '' ? $datastring .= '&' : $datastring .= '';
             $datastring .= $key . '=' . $value;
         }
-        $hmac = base64_encode(hash_hmac('sha1', utf8_encode($datastring), base64_decode($yubicoApiKey), true));
-        return $hmac === $signature;
+        $hmac = base64_encode(hash_hmac('sha1', utf8_encode($datastring), base64_decode($yubicoClientKey), true));
+
+        $valid = $hmac === $signature;
+        if (!$valid) {
+            $this->addError('Could not verify signature');
+        }
+
+        return $valid;
     }
 
     /**
      * Call the Auth API at Yubico server
      *
-     * @param String $otp One-time Password entered by user
-     * @return Boolean Is the password OK ?
+     * @param string $otp
+     * @return bool
      */
-    public function verifyOtp($otp)
+    public function verifyOtp(string $otp): bool
     {
-        // Get the global API ID/KEY
-        $yubicoApiId = trim($this->getConfig('yubikeyClientId'));
-        $yubicoApiKey = trim($this->getConfig('yubikeyClientKey'));
-        $disableSslVerification = (int) $this->getConfig('disableSslVerification');
-
-        $apiUrls = $this->getConfig('yubikeyApiUrls');
-        $requestParams['id'] = $yubicoApiId;
-        $requestParams['otp'] = $otp;
-        $requestParams['nonce'] = md5(uniqid(rand(), false));
+        $requestParams['id'] = $this->yubikeyClientId;
+        $requestParams['otp'] = trim($otp);
+        $requestParams['nonce'] = md5(uniqid(rand()));
         ksort($requestParams);
         $parameters = '';
         foreach ($requestParams as $p => $v) {
@@ -125,14 +101,14 @@ class YubikeyAuthService
             hash_hmac(
                 'sha1',
                 $parameters,
-                base64_decode($yubicoApiKey),
+                base64_decode($this->yubikeyClientKey),
                 true
             )
         );
         $signature = preg_replace('/\+/', '%2B', $signature);
         $parameters .= '&h=' . $signature;
         $urls = [];
-        foreach ($apiUrls as $apiUrl) {
+        foreach ($this->yubikeyApiUrl as $apiUrl) {
             $urls[] = $apiUrl . '?' . $parameters;
         }
         $curlOptions = [
@@ -142,7 +118,7 @@ class YubikeyAuthService
         if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
             $curlOptions[CURLOPT_PROXY] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer'];
         }
-        if ($disableSslVerification === 1) {
+        if ($this->disableSslVerification) {
             $curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
             $curlOptions[CURLOPT_SSL_VERIFYHOST] = false;
         }
@@ -159,70 +135,31 @@ class YubikeyAuthService
         do {
             $status = curl_multi_exec($mh, $active);
         } while ($status === CURLM_CALL_MULTI_PERFORM || $active);
+
         foreach ($urls as $i => $url) {
             $response = curl_multi_getcontent($connections[$i]);
-            if ($this->verifyHmac($response, $yubicoApiKey)) {
+            if ($this->verifyHmac($response, $this->yubikeyClientKey)) {
                 if (!preg_match('/status=([a-zA-Z0-9_]+)/', $response, $result)) {
                     return false;
                 }
                 if ($result[1] === 'OK') {
                     curl_multi_close($mh);
                     return true;
-                } else {
-                    $this->addError($result[1]);
                 }
-            } else {
-                $this->addError('Could not verify signature');
+                $this->addError($result[1]);
             }
         }
         curl_multi_close($mh);
+
         return false;
     }
 
-    /**
-     * Set configuration
-     *
-     * @param Mixed $config
-     * @param String $key Optional array key for config attribute
-     * @return void
-     */
-    public function setConfig($config, $key = '')
-    {
-        if ($key !== '') {
-            $this->config[$key] = $config;
-        } else {
-            $this->config = $config;
-        }
-    }
-
-    /**
-     * Get configuration
-     *
-     * @param String $key Optional array key for config attribute
-     * @return array|string
-     */
-    public function getConfig($key = '')
-    {
-        if ($key !== '') {
-            $ret = $this->config[$key];
-        } else {
-            $ret = $this->config;
-        }
-        return $ret;
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
 
-    /**
-     * @param string $error
-     */
-    public function addError($error)
+    protected function addError(string $error): void
     {
         $this->errors[] = $error;
     }

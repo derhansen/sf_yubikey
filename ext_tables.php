@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') or die();
 
 call_user_func(function () {
@@ -8,6 +9,6 @@ call_user_func(function () {
     $iconRegistry->registerIcon(
         'ext-sfyubikey-icon',
         \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
-        ['source' => 'EXT:sf_yubikey/ext_icon.svg']
+        ['source' => 'EXT:sf_yubikey/Resources/Public/Icons/yubico.svg']
     );
 });
