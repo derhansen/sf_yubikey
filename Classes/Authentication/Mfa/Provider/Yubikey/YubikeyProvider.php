@@ -3,6 +3,7 @@ namespace Derhansen\SfYubikey\Authentication\Mfa\Provider\Yubikey;
 
 use Derhansen\SfYubikey\Service\YubikeyAuthService;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaContentType;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderInterface;
@@ -17,6 +18,13 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 class YubikeyProvider implements MfaProviderInterface
 {
     private const MAX_ATTEMPTS = 3;
+
+    private ResponseFactoryInterface $responseFactory;
+
+    public function __construct(ResponseFactoryInterface $responseFactory)
+    {
+        $this->responseFactory = $responseFactory;
+    }
 
     public function canProcess(ServerRequestInterface $request): bool
     {
@@ -69,7 +77,9 @@ class YubikeyProvider implements MfaProviderInterface
                 $this->prepareAuthView($view, $propertyManager);
                 break;
         }
-        return new HtmlResponse($view->assign('provider', $this)->render());
+        $response = $this->responseFactory->createResponse();
+        $response->getBody()->write($view->assign('provider', $this)->render());
+        return $response;
     }
 
     public function activate(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
