@@ -159,6 +159,11 @@ class YubikeyAuthService
         return $this->errors;
     }
 
+    public function isInitialized(): bool
+    {
+        return $this->initialized;
+    }
+
     protected function addError(string $error): void
     {
         $this->errors[] = $error;

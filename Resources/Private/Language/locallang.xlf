@@ -4,10 +4,22 @@
 		<header/>
 		<body>
 			<trans-unit id="yubikey.title">
-				<source>YubiKey Authentication</source>
+				<source>YubiKey OTP MFA authentication</source>
 			</trans-unit>
 			<trans-unit id="yubikey.description">
-				<source>Authentication for TYPO3 backend and frontend login using YubiKey OTP two-factor authentication.</source>
+				<source>YubiKey OTP MFA authentication for the backend login.</source>
+			</trans-unit>
+			<trans-unit id="invalidConfiguration.title">
+				<source>Invalid configuration</source>
+			</trans-unit>
+			<trans-unit id="invalidConfiguration.message">
+				<source>The extension configuration is invalid. Make sure to configure "yubikeyClientId", "yubikeyClientKey" and "yubikeyApiUrls.</source>
+			</trans-unit>
+			<trans-unit id="yubikeyAlreadyConfigured.title">
+				<source>YubiKey already configured</source>
+			</trans-unit>
+			<trans-unit id="yubikeyAlreadyConfigured.message">
+				<source>The YubiKey is already configured for your account.</source>
 			</trans-unit>
 		</body>
 	</file>

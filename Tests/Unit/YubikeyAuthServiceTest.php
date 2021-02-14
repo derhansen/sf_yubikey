@@ -14,7 +14,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Testcase for class Derhansen\SfYubikey\YubikeyAuthService
+ * Testcase for class Derhansen\SfYubikey\Service\YubikeyAuthService
  */
 class YubikeyAuthServiceTest extends UnitTestCase
 {

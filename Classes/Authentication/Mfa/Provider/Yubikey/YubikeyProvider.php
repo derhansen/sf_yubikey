@@ -10,6 +10,7 @@ namespace Derhansen\SfYubikey\Authentication\Mfa\Provider\Yubikey;
  */
 
 use Derhansen\SfYubikey\Service\YubikeyAuthService;
+use Derhansen\SfYubikey\Service\YubikeyService;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,60 +18,118 @@ use TYPO3\CMS\Core\Authentication\Mfa\MfaContentType;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderInterface;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderPropertyManager;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class YubikeyProvider implements MfaProviderInterface
 {
+    private const LLL = 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:';
     private const MAX_ATTEMPTS = 3;
 
     private ResponseFactoryInterface $responseFactory;
+    private YubikeyAuthService $yubikeyAuthService;
+    private YubikeyService $yubikeyService;
 
-    public function __construct(ResponseFactoryInterface $responseFactory)
-    {
+    public function __construct(
+        ResponseFactoryInterface $responseFactory,
+        YubikeyAuthService $yubikeyAuthService,
+        YubikeyService $yubikeyService
+    ) {
         $this->responseFactory = $responseFactory;
+        $this->yubikeyAuthService = $yubikeyAuthService;
+        $this->yubikeyService = $yubikeyService;
     }
 
+    /**
+     * Checks if a YubiKey OTP is in the current request
+     *
+     * @param ServerRequestInterface $request
+     * @return bool
+     */
     public function canProcess(ServerRequestInterface $request): bool
     {
-        return $this->getYubikeys($request) !== '' || $this->getYubikey($request) !== '';
+        return $this->getYubikeyOtp($request) !== '';
     }
 
+    /**
+     * Evaluate if the provider is activated by checking the active state from the provider properties.
+     *
+     * @param MfaProviderPropertyManager $propertyManager
+     * @return bool
+     */
     public function isActive(MfaProviderPropertyManager $propertyManager): bool
     {
         return (bool)$propertyManager->getProperty('active');
     }
 
+    /**
+     * Evaluate if the provider is temporarily locked by checking the current attempts state
+     * from the provider properties.
+     *
+     * @param MfaProviderPropertyManager $propertyManager
+     * @return bool
+     */
     public function isLocked(MfaProviderPropertyManager $propertyManager): bool
     {
         $attempts = (int)$propertyManager->getProperty('attempts', 0);
         return $attempts >= self::MAX_ATTEMPTS;
     }
 
+    /**
+     * Checks if the given OTP is a configured YubiKey for the current user and if so, verifies the OTP
+     * against the configured authentication servers
+     *
+     * @param ServerRequestInterface $request
+     * @param MfaProviderPropertyManager $propertyManager
+     * @return bool
+     */
     public function verify(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
-        $yubiKeyAuthService = GeneralUtility::makeInstance(YubikeyAuthService::class);
+        $otp = $this->getYubikeyOtp($request);
+        $yubikeys = $propertyManager->getProperty('yubikeys');
+        if (!$this->yubikeyService->isInYubikeys($yubikeys, $otp)) {
+            // YubiKey not configured for user
+            return false;
+        }
 
-        // @todo: Check if given YubiKey is configured for user (see https://github.com/derhansen/sf_yubikey/blob/master/Classes/YubikeyAuthService.php#L111)
-
-        $verified = $yubiKeyAuthService->verifyOtp($this->getYubikey($request));
+        $verified = $this->yubikeyAuthService->verifyOtp($otp);
         if (!$verified) {
             $attempts = $propertyManager->getProperty('attempts', 0);
             $propertyManager->updateProperties(['attempts' => ++$attempts]);
             return false;
         }
-        $propertyManager->updateProperties([
-            'lastUsed' => GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('date', 'timestamp')
-        ]);
 
-        return $verified;
+        $yubikeys = $this->yubikeyService->updateYubikeyUsage(
+            $yubikeys,
+            $otp,
+            GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('date', 'timestamp')
+        );
+        $propertyManager->updateProperties(['yubikeys' => $yubikeys]);
+
+        return true;
     }
 
-    public function renderContent(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager, string $type): ResponseInterface
-    {
+    /**
+     * Initialize view and forward to the appropriate implementation
+     * based on the content type to be displayed.
+     *
+     * @param ServerRequestInterface $request
+     * @param MfaProviderPropertyManager $propertyManager
+     * @param string $type
+     * @return ResponseInterface
+     */
+    public function renderContent(
+        ServerRequestInterface $request,
+        MfaProviderPropertyManager $propertyManager,
+        string $type
+    ): ResponseInterface {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplateRootPaths(['EXT:sf_yubikey/Resources/Private/Templates/']);
+        $view->setPartialRootPaths(['EXT:sf_yubikey/Resources/Private/Partials/']);
         switch ($type) {
             case MfaContentType::SETUP:
                 $this->prepareSetupView($view, $propertyManager);
@@ -87,6 +146,13 @@ class YubikeyProvider implements MfaProviderInterface
         return $response;
     }
 
+    /**
+     * Activate the provider by checking the necessary parameters
+     *
+     * @param ServerRequestInterface $request
+     * @param MfaProviderPropertyManager $propertyManager
+     * @return bool
+     */
     public function activate(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
         if ($this->isActive($propertyManager)) {
@@ -99,9 +165,19 @@ class YubikeyProvider implements MfaProviderInterface
             return false;
         }
 
-        // @todo Verify YubiKey (I think only verify if this all entries are valid keys - no external check)
+        $newYubikey = $this->getNewYubikey($request);
+        if ($this->isNewYubikeyRequest($request) && empty($newYubikey)) {
+            // Either not YubiKey OTP given or OTP is wrong
+            return false;
+        }
 
-        $properties = ['yubikeys' => $this->getYubikeys($request), 'active' => true];
+        $yubikeys = [];
+        $yubikeys[] = $newYubikey;
+
+        $properties = [
+            'yubikeys' => $yubikeys,
+            'active' => true
+        ];
 
         // Usually there should be no entry if the provider is not activated, but to prevent the
         // provider from being unable to activate again, we update the existing entry in such case.
@@ -110,6 +186,13 @@ class YubikeyProvider implements MfaProviderInterface
             : $propertyManager->createProviderEntry($properties);
     }
 
+    /**
+     * Deactivates the provider for the current user
+     *
+     * @param ServerRequestInterface $request
+     * @param MfaProviderPropertyManager $propertyManager
+     * @return bool
+     */
     public function deactivate(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
         if (!$this->isActive($propertyManager)) {
@@ -121,6 +204,13 @@ class YubikeyProvider implements MfaProviderInterface
         return $propertyManager->deleteProviderEntry();
     }
 
+    /**
+     * Handle the unlock action by resetting the attempts provider property
+     *
+     * @param ServerRequestInterface $request
+     * @param MfaProviderPropertyManager $propertyManager
+     * @return bool
+     */
     public function unlock(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
         if (!$this->isLocked($propertyManager)) {
@@ -133,15 +223,39 @@ class YubikeyProvider implements MfaProviderInterface
     }
 
     /**
+     * Handle the save action for the provider. Takes care of adding/removing YubiKeys and updating
+     * provider properties
+     *
      * @param ServerRequestInterface $request
      * @param MfaProviderPropertyManager $propertyManager
      * @return bool
      */
     public function update(ServerRequestInterface $request, MfaProviderPropertyManager $propertyManager): bool
     {
-        $yubikeys = (string)($request->getQueryParams()['yubikeys'] ?? $request->getParsedBody()['yubikeys'] ?? '');
-        if ($yubikeys !== '') {
+        $yubikeys = $propertyManager->getProperty('yubikeys');
+        $otp = $this->getYubikeyOtp($request);
+        $isNewYubikeyRequest = $this->isNewYubikeyRequest($request);
+        $existingYubikey = $this->yubikeyService->isInYubikeys($yubikeys, $otp);
+
+        if ($this->isDeleteYubikeyRequest($request)) {
+            // Handle delete request
+            $yubikeyToDelete = $request->getParsedBody()['delete'];
+            $yubikeys = $this->yubikeyService->deleteFromYubikeys($yubikeys, $yubikeyToDelete);
             return $propertyManager->updateProperties(['yubikeys' => $yubikeys]);
+        }
+
+        if ($isNewYubikeyRequest && !$existingYubikey) {
+            // Add new YubiKey
+            $yubikeys[] = $this->getNewYubikey($request);
+            return $propertyManager->updateProperties(['yubikeys' => $yubikeys]);
+        }
+
+        if ($isNewYubikeyRequest && $existingYubikey) {
+            $this->addFlashMessage(
+                $this->getLanguageService()->sL(self::LLL . 'yubikeyAlreadyConfigured.message'),
+                $this->getLanguageService()->sL(self::LLL . 'yubikeyAlreadyConfigured.title'),
+                FlashMessage::WARNING
+            );
         }
 
         // Provider properties successfully updated
@@ -154,8 +268,10 @@ class YubikeyProvider implements MfaProviderInterface
      */
     protected function prepareSetupView(ViewInterface $view, MfaProviderPropertyManager $propertyManager): void
     {
-        // @todo Check Extension Settings for Yubico Client ID and Client Key and disable textarea if not available
         $view->setTemplate('Setup');
+        $view->assignMultiple([
+            'initialized' => $this->isAuthServiceInitialized()
+        ]);
     }
 
     /**
@@ -165,9 +281,9 @@ class YubikeyProvider implements MfaProviderInterface
     protected function prepareEditView(ViewInterface $view, MfaProviderPropertyManager $propertyManager): void
     {
         $view->setTemplate('Edit');
-        // @todo Check Extension Settings for Yubico Client ID and Client Key and disable textarea if not available
         $view->assignMultiple([
-            'yubikeys' => $propertyManager->getProperty('yubikeys')
+            'yubikeys' => $propertyManager->getProperty('yubikeys'),
+            'initialized' => $this->isAuthServiceInitialized()
         ]);
     }
 
@@ -182,24 +298,78 @@ class YubikeyProvider implements MfaProviderInterface
     }
 
     /**
-     * Internal helper method for fetching the YubiKeys from the request in setup/edit view
+     * Internal helper method for fetching the YubiKey OTP from the request for authentication
      *
      * @param ServerRequestInterface $request
      * @return string
      */
-    protected function getYubikeys(ServerRequestInterface $request): string
+    protected function getYubikeyOtp(ServerRequestInterface $request): string
     {
-        return (string)($request->getQueryParams()['yubikeys'] ?? $request->getParsedBody()['yubikeys'] ?? '');
+        return (string)($request->getQueryParams()['yubikey-otp'] ?? $request->getParsedBody()['yubikey-otp'] ?? '');
     }
 
     /**
-     * Internal helper method for fetching the YubiKey from the request
+     * Internal helper method for fetching a new YubiKey from the request. Also checks if the provided YubiKey OTP
+     * id valid and extracts the YubiKey ID from the OTP.
      *
      * @param ServerRequestInterface $request
-     * @return string
+     * @return array
      */
-    protected function getYubikey(ServerRequestInterface $request): string
+    protected function getNewYubikey(ServerRequestInterface $request): array
     {
-        return (string)($request->getQueryParams()['yubikey'] ?? $request->getParsedBody()['yubikey'] ?? '');
+        $yubikeyData = [];
+        $name = (string)$request->getParsedBody()['yubikey-name'] ?? '';
+        $yubikey = $this->getYubikeyOtp($request);
+
+        $yubikeyId = $this->yubikeyService->getIdFromOtp($yubikey);
+
+        if ($yubikeyId !== '') {
+            $yubikeyData = [
+                'name' => $name,
+                'yubikeyId' => $yubikeyId,
+                'dateAdded' => GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('date', 'timestamp'),
+                'lastUsed' => ''
+            ];
+        }
+
+        return $yubikeyData;
+    }
+
+    protected function isNewYubikeyRequest(ServerRequestInterface $request): bool
+    {
+        return $this->getYubikeyOtp($request) !== '';
+    }
+
+    protected function isDeleteYubikeyRequest(ServerRequestInterface $request): bool
+    {
+        $delete = $request->getParsedBody()['delete'] ?? '';
+        return $delete !== '';
+    }
+
+    protected function isAuthServiceInitialized(): bool
+    {
+        $initialized = $this->yubikeyAuthService->isInitialized();
+        if (!$initialized) {
+            $this->addFlashMessage(
+                $this->getLanguageService()->sL(self::LLL . 'invalidConfiguration.message'),
+                $this->getLanguageService()->sL(self::LLL . 'invalidConfiguration.title'),
+                FlashMessage::ERROR
+            );
+        }
+
+        return $initialized;
+    }
+
+    protected function addFlashMessage(string $message, string $title = '', int $severity = FlashMessage::INFO): void
+    {
+        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $severity, true);
+        $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
+        $defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
+        $defaultFlashMessageQueue->enqueue($flashMessage);
+    }
+
+    protected function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
     }
 }
