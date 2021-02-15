@@ -7,6 +7,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 call_user_func(function () {
     $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
 
+    // Make YubiKey the recommended provider
+    $GLOBALS['TYPO3_CONF_VARS']['BE']['recommendedMfaProvider'] = 'yubikey';
+
     // Enable logging depending on extension settings
     if ($extConf['devlog']) {
         $logLevel = \TYPO3\CMS\Core\Log\LogLevel::DEBUG;

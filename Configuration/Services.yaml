@@ -19,4 +19,5 @@ services:
               identifier: 'yubikey'
               title: 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.title'
               description: 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.description'
+              setupInstructions: 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.setupInstructions'
               icon: 'ext-sfyubikey-icon'
