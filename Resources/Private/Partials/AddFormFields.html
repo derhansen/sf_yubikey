@@ -1,0 +1,31 @@
+<h3><f:translate key="LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.add"/></h3>
+
+<fieldset class="form-section col-lg-6 col-md-8 col-sm-12">
+    <div class="mb-3">
+        <label for="yubikey-name" class="form-label">
+            <f:translate key="LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.name.inputLabel"/>
+        </label>
+        <div class=form-field-item">
+            <span id="yubikey-name-help" class="text-muted">
+            <f:translate key="LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.name.inputHelp"/>
+            </span>
+            <div class="form-control-wrap">
+                <input type="text" id="yubikey-name" name="yubikey-name" class="form-control" placeholder="{f:translate(key: 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.name.inputPlaceholder')}">
+            </div>
+        </div>
+
+    </div>
+    <div class="mb-3">
+        <label for="yubikey-otp" class="form-label">
+            <f:translate key="LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.inputLabel"/>
+        </label>
+        <div class=form-field-item">
+            <span id="yubikey-help" class="text-muted">
+            <f:translate key="LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.inputHelp"/>
+            </span>
+            <div class="form-control-wrap">
+                <input type="text" id="yubikey-otp" name="yubikey-otp" class="form-control" placeholder="{f:translate(key: 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.inputPlaceholder')}" required="required">
+            </div>
+        </div>
+    </div>
+</fieldset>

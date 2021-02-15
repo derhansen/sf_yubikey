@@ -1,8 +1,8 @@
 <?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'YubiKey two-factor OTP authentication',
-    'description' => 'An authentication service for TYPO3 which extends the backend/frontend login by YubiKey OTP two-factor authentication.',
+    'title' => 'YubiKey OTP MFA provider',
+    'description' => 'YubiKey OTP MFA provider for the backend login.',
     'category' => 'services',
     'author' => 'Torben Hansen',
     'author_email' => 'derhansen@gmail.com',

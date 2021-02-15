@@ -6,7 +6,7 @@
 <f:if condition="!{isLocked}">
     <f:then>
         <div class="mb-3">
-            <label for="yubikey" class="form-label">
+            <label for="yubikey-otp" class="form-label">
                 <f:translate key="LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.auth.inputLabel"/>
             </label>
             <div class=form-field-item">
@@ -14,7 +14,7 @@
                     <f:translate key="LLL:EXT:sf_yubikey/Resources/Private/Language/locallang.xlf:yubikey.auth.inputHelp"/>
                 </span>
                 <div class="form-control-wrap" style="max-width: 480px">
-                    <input type="text" id="yubikey" name="yubikey" autofocus="autofocus" value="" class="form-control" required="required" />
+                    <input type="text" id="yubikey-otp" name="yubikey-otp" autofocus="autofocus" value="" class="form-control" required="required" />
                 </div>
             </div>
         </div>

@@ -33,8 +33,9 @@
     "typo3/cms-recordlist": "dev-master",
     "typo3/cms-extbase": "dev-master",
     "typo3/cms-fluid": "dev-master",
-    "typo3/testing-framework": "^4.9 || ^6.1",
-    "overtrue/phplint": "^1.1"
+    "typo3/testing-framework": "^6.6.2",
+    "overtrue/phplint": "^1.1",
+    "friendsofphp/php-cs-fixer": "^2.16.1"
   },
   "autoload": {
     "psr-4": {
