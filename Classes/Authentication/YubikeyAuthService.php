@@ -1,76 +1,30 @@
 <?php
-namespace DERHANSEN\SfYubikey;
+namespace DERHANSEN\SfYubikey\Authentication;
 
 /*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
+ * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
  */
 
+use DERHANSEN\SfYubikey\Service\YubikeyService;
+use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Service "Yubikey OTP Authentication" for the "sf_yubikey" extension.
  */
-class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenticationService
+class YubikeyAuthService extends AbstractAuthenticationService
 {
-    /**
-     * Prefix for temporary files
-     *
-     * @var string
-     */
-    public $prefixId = 'tx_sfyubikey_sv1';
+    protected array $extConf;
+    protected ?YubikeyService $yubiKeyAuth = null;
 
-    /**
-     * Keeps extension key.
-     *
-     * @var string
-     */
-    public $extKey = 'sf_yubikey';
-
-    /**
-     * Keeps extension configuration.
-     *
-     * @var mixed
-     */
-    protected $extConf;
-
-    /**
-     * YubiKey authentication helper
-     *
-     * @var \DERHANSEN\SfYubikey\YubikeyAuth
-     */
-    protected $yubiKeyAuth = null;
-
-    /**
-     * Checks if service is available.
-     *
-     * @return bool TRUE if service is available
-     */
-    public function init(): bool
+    public function __construct(YubikeyService $yubikeyService)
     {
-        $available = false;
-        $this->extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)
-            ->get('sf_yubikey');
-        /** @var YubikeyAuth $yubiKeyAuth */
-        $this->yubiKeyAuth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            'DERHANSEN\SfYubikey\YubikeyAuth',
-            $this->extConf
-        );
-        if (isset($this->extConf['yubikeyEnableBE']) && (bool)$this->extConf['yubikeyEnableBE'] && TYPO3_MODE == 'BE') {
-            $available = true;
-        } elseif (isset($this->extConf['yubikeyEnableFE']) && (bool)$this->extConf['yubikeyEnableFE'] && TYPO3_MODE == 'FE') {
-            $available = true;
-        }
-        return $available;
+        $this->extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
+        $this->yubiKeyAuth = $yubikeyService;
     }
 
     /**
@@ -84,31 +38,31 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
      * @param array $user Array containing the userdata
      * @return int authentication statuscode, one of 0, 100 and 200
      */
-    public function authUser(array $user)
+    public function authUser(array $user): int
     {
-        // 0 means authentication failure
-        $ret = 0;
+        $loginType = $this->pObj->loginType;
 
-        // only handle Yubikey for actual login requests
-        if (empty($this->login['status']) || $this->login['status'] !== 'login') {
+        // only handle Yubikey for actual login requests and if YubiKey check is enabled
+        if (empty($this->login['status']) || $this->login['status'] !== 'login' || !$this->isYubikeyCheckEnabled()) {
             return 100;
         }
+
         // Check if user Yubikey-Authentication is enabled for this user
         if (!$user['tx_sfyubikey_yubikey_enable']) {
             $this->logger->debug(
-                TYPO3_MODE . ' login using TYPO3 password authentication for user: ' . $user['username']
+                $loginType . ' login using TYPO3 password authentication for user: ' . $user['username']
             );
             // Continue with TYPO3 authentication
             $ret = 100;
         } else {
             $this->logger->debug(
-                TYPO3_MODE . ' login using Yubikey authentication for user: ' . $user['username']
+                $loginType . ' login using Yubikey authentication for user: ' . $user['username']
             );
 
             // Get Yubikey OTP
-            $yubikeyOtp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('t3-yubikey');
+            $yubikeyOtp = GeneralUtility::_GP('t3-yubikey');
             $this->logger->debug('Yubikey: ' . $yubikeyOtp);
-            $tempYubiKeyIds = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(
+            $tempYubiKeyIds = GeneralUtility::trimExplode(
                 chr(10),
                 $user['tx_sfyubikey_yubikey_id'],
                 true
@@ -123,10 +77,10 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
                 $this->logger->debug('Yubikey config - ClientId: ' . $clientId);
 
                 // Check Yubikey OTP
-                $authResult = $this->yubiKeyAuth->checkOtp($yubikeyOtp);
+                $authResult = $this->yubiKeyAuth->verifyOtp($yubikeyOtp);
 
                 if ($authResult === false) {
-                    $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
+                    $errorMessage = $loginType . ' Login-attempt from %s (%s), username \'%s\', Yubikey not accepted!';
                     $this->writelog(
                         255,
                         3,
@@ -145,14 +99,13 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
                     $ret = 100;
                 }
             } else {
-                if ($yubikeyOtp != '') {
+                $ret = 0;
+                if ($yubikeyOtp !== '') {
                     // Wrong Yubikey ID - Authentication failure
-                    $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', wrong Yubikey ID!';
-                    $ret = 0;
+                    $errorMessage = $loginType . ' Login-attempt from %s (%s), username \'%s\', wrong Yubikey ID!';
                 } else {
                     // Yubikey missing
-                    $errorMessage = TYPO3_MODE . ' Login-attempt from %s (%s), username \'%s\', Yubikey needed, but empty Yubikey supplied!';
-                    $ret = 0;
+                    $errorMessage = $loginType . ' Login-attempt from %s (%s), username \'%s\', Yubikey needed, but empty Yubikey supplied!';
                 }
                 $this->writelog(
                     255,
@@ -169,5 +122,22 @@ class YubikeyAuthService extends \TYPO3\CMS\Core\Authentication\AbstractAuthenti
             }
         }
         return $ret;
+    }
+
+    private function isYubikeyCheckEnabled(): bool
+    {
+        $yubikeyCheckEnabled = false;
+        if (isset($this->extConf['yubikeyEnableBE']) &&
+            (bool)$this->extConf['yubikeyEnableBE'] &&
+            $this->pObj->loginType === 'BE'
+        ) {
+            $yubikeyCheckEnabled = true;
+        } elseif (isset($this->extConf['yubikeyEnableFE']) &&
+            (bool)$this->extConf['yubikeyEnableFE'] &&
+            $this->pObj->loginType == 'FE'
+        ) {
+            $yubikeyCheckEnabled = true;
+        }
+        return $yubikeyCheckEnabled;
     }
 }

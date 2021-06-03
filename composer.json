@@ -23,18 +23,19 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
     "ext-curl": "*",
-    "typo3/cms-core": "^9.5.5 || ^10.4"
+    "typo3/cms-core": "^11.2 || dev-master"
   },
   "require-dev": {
-    "typo3/cms-backend": "^9.5.5 || ^10.4",
-    "typo3/cms-frontend": "^9.5.5 || ^10.4",
-    "typo3/cms-recordlist": "^9.5.5 || ^10.4",
-    "typo3/cms-extbase": "^9.5.5 || ^10.4",
-    "typo3/cms-fluid": "^9.5.5 || ^10.4",
-    "typo3/testing-framework": "^4.9 || ^6.1",
-    "overtrue/phplint": "^1.1"
+    "typo3/cms-backend": "^11.2 || dev-master",
+    "typo3/cms-frontend": "^11.2 || dev-master",
+    "typo3/cms-recordlist": "^11.2 || dev-master",
+    "typo3/cms-extbase": "^11.2 || dev-master",
+    "typo3/cms-fluid": "^11.2 || dev-master",
+    "typo3/testing-framework": "^6.8.2",
+    "phpunit/phpunit": "^8.5.13",
+    "overtrue/phplint": "^2.3"
   },
   "autoload": {
     "psr-4": {

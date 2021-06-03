@@ -14,9 +14,13 @@ namespace DERHANSEN\SfYubikey\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
+use DERHANSEN\SfYubikey\Authentication\YubikeyAuthService;
+use DERHANSEN\SfYubikey\Service\YubikeyService;
 use DERHANSEN\SfYubikey\YubikeyAuth;
-use DERHANSEN\SfYubikey\YubikeyAuthService;
+use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -40,7 +44,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                     'tx_sfyubikey_yubikey_enable' => false
                 ],
                 '',
-                null,
+                false,
                 'login',
                 100
             ],
@@ -50,7 +54,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                     'tx_sfyubikey_yubikey_enable' => false
                 ],
                 '',
-                null,
+                false,
                 'login',
                 100
             ],
@@ -61,7 +65,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001'
                 ],
                 '',
-                null,
+                false,
                 'login',
                 0
             ],
@@ -72,7 +76,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001'
                 ],
                 'yubikey00000someOTPvalue',
-                null,
+                false,
                 'login',
                 0
             ],
@@ -109,14 +113,14 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 'login',
                 100
             ],
-            'No YubiKey given, but ststus != login' => [
+            'No YubiKey given, but status != login' => [
                 [
                     'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
                     'tx_sfyubikey_yubikey_id' => 'yubikey00001'
                 ],
                 '',
-                null,
+                false,
                 'other-status',
                 100
             ],
@@ -132,59 +136,53 @@ class YubikeyAuthServiceTest extends UnitTestCase
         $userData,
         $yubikeyOtp,
         $checkOtpResult,
-        $status,
+        $loginStatus,
         $expectedReturnCode
     ) {
-        /** @var \DERHANSEN\SfYubikey\YubikeyAuthService $mock */
-        $mock = $this->getMockBuilder(YubikeyAuthService::class)
-            ->setMethods(['dummy'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mock->authInfo = [
-            'REMOTE_ADDR' => '127.0.0.1',
-            'REMOTE_HOST' => 'localhost'
-        ];
-        $mock->login = [
-            'uname' => $userData['username'],
-            'status' => $status
-        ];
+        $this->setExtensionConfig();
 
-        $mockLogger = $this->getMockBuilder(Logger::class)
-            ->setMethods(['dummy'])
+        $yubikeyServiceMock = $this->getMockBuilder(YubikeyService::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mock->setLogger($mockLogger);
+        $yubikeyServiceMock->expects($this->any())->method('verifyOtp')->willReturn($checkOtpResult);
+
+        $authService = new YubikeyAuthService($yubikeyServiceMock);
+        $pObjProphecy = $this->prophesize(AbstractUserAuthentication::class);
+        $pObjProphecy->loginType = 'BE';
+        $loggerProphecy = $this->prophesize(Logger::class);
+        $authService->setLogger($loggerProphecy->reveal());
+        $authService->initAuth(
+            'authUserBE',
+            [
+                'uident_text' => 'password',
+                'uname' => 'username',
+                'status' => $loginStatus
+            ],
+            [
+                'db_user' => ['table' => 'be_users'],
+                'REMOTE_HOST' => 'localhost',
+                'REMOTE_ADDR' => '127.0.0.1'
+            ],
+            $pObjProphecy->reveal()
+        );
 
         // Set YubiKey OTP GET variable if given
-        if ($yubikeyOtp != '') {
+        if ($yubikeyOtp !== '') {
             $_GET = ['t3-yubikey' => $yubikeyOtp];
         }
 
-        $extConf = [
+        $retCode = $authService->authUser($userData);
+        $this->assertEquals($expectedReturnCode, $retCode);
+    }
+
+    protected function setExtensionConfig(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['sf_yubikey'] = [
+            'yubikeyClientId' => 'test',
+            'yubikeyClientKey' => 'test',
+            'yubikeyApiUrls' => 'api1,api2',
             'yubikeyEnableBE' => 1,
             'yubikeyEnableFE' => 0,
-            'yubikeyClientId' => 'test',
-            'yubikeyClientKey' => 'test'
         ];
-
-        // Set OTP validation result if given
-        if ($checkOtpResult !== null) {
-            /** @var YubikeyAuth $mockYubikeyAuth */
-            $mockYubikeyAuth = $this->getMockBuilder(\DERHANSEN\SfYubikey\YubikeyAuth::class)
-                ->disableOriginalConstructor()->getMock();
-            $mockYubikeyAuth->expects($this->once())->method('checkOtp')->with($yubikeyOtp)
-                ->will($this->returnValue($checkOtpResult));
-
-            $objectReflection = new \ReflectionObject($mock);
-            $yubiKeyAuthProperty = $objectReflection->getProperty('yubiKeyAuth');
-            $yubiKeyAuthProperty->setAccessible(true);
-            $yubiKeyAuthProperty->setValue($mock, $mockYubikeyAuth);
-            $extConfProperty = $objectReflection->getProperty('extConf');
-            $extConfProperty->setAccessible(true);
-            $extConfProperty->setValue($mock, $extConf);
-        }
-
-        $retCode = $mock->authUser($userData);
-        $this->assertEquals($expectedReturnCode, $retCode);
     }
 }
