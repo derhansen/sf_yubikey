@@ -2,12 +2,13 @@
 namespace DERHANSEN\SfYubikey\Command;
 
 /*
- * This file is part of the package DERHANSEN/SfYubikey.
+ * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
- * LICENSE file that was distributed with this source code.
+ * LICENSE.txt file that was distributed with this source code.
  */
 
+use DERHANSEN\SfYubikey\Service\YubikeyService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,6 +22,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CheckYubiKeyOtpCommand extends Command
 {
+    private YubikeyService $yubikeyService;
+
+    public function __construct(YubikeyService $yubikeyService)
+    {
+        $this->yubikeyService = $yubikeyService;
+        parent::__construct();
+    }
+
     /**
      * Configuring the command options
      */
@@ -47,18 +56,13 @@ class CheckYubiKeyOtpCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
 
-        $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)
-            ->get('sf_yubikey');
-        $yubikeyAuth = GeneralUtility::makeInstance(
-            \DERHANSEN\SfYubikey\YubikeyAuth::class,
-            $extensionConfiguration
-        );
-
         $otp = $input->getArgument('otp');
-        if ($yubikeyAuth->checkOtp($otp) === true) {
+        if ($this->yubikeyService->verifyOtp($otp) === true) {
             $io->success('OK: ' . $otp . ' has been successfully validated.');
+            return 0;
         } else {
-            $io->error($otp . '  could not be validated. Reasons: ' . implode(' / ', $yubikeyAuth->getErrors()));
+            $io->error($otp . '  could not be validated. Reasons: ' . implode(' / ', $this->yubikeyService->getErrors()));
+            return 1;
         }
     }
 }
