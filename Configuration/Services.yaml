@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  DERHANSEN\SfYubikey\:
+    resource: '../Classes/*'
+
+  DERHANSEN\SfYubikey\Authentication\YubikeyAuthService:
+    public: true
+
+  DERHANSEN\SfYubikey\Command\CheckYubiKeyOtpCommand:
+    tags:
+      - name: 'console.command'
+        command: 'sf_yubikey:checkyubikeyotp'
+        schedulable: false
