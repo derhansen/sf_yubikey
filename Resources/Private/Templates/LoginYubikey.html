@@ -1,32 +1,34 @@
 <f:layout name="Login" />
 
 <f:section name="loginFormFields">
-    <div class="form-group t3js-login-username-section" id="t3-login-username-section">
-        <div class="form-control-wrap">
-            <div class="form-control-holder">
-                <input type="text" id="t3-username" name="username" value="{presetUsername}" placeholder="{f:translate(key: 'login.username')}" class="form-control input-login t3js-clearable t3js-login-username-field" autofocus="autofocus" required="required" />
-                <div class="form-notice-capslock hidden t3js-login-alert-capslock">
-                    <img src="{images.capslock}" width="14" height="14" alt="{f:translate(key: 'login.error.capslock')}" title="{f:translate(key: 'login.error.capslock')}" />
-                </div>
-            </div>
+  <div class="form-group t3js-login-username-section" id="t3-login-username-section">
+    <div class="form-control-wrap">
+      <div class="form-control-holder">
+        <input type="text" id="t3-username" name="username" value="{presetUsername}" aria-label="{f:translate(key: 'login.username')}" placeholder="{f:translate(key: 'login.username')}" class="form-control input-login t3js-clearable t3js-login-username-field" autofocus="autofocus" autocomplete="username" required="required" />
+        <div role="status" class="form-notice-capslock hidden t3js-login-alert-capslock">
+          <img aria-hidden="true" src="{images.capslock}" width="14" height="14" alt="" title="{f:translate(key: 'login.error.capslock')}" />
+          <span class="sr-only"><f:translate key="login.error.capslockStatus" /></span>
         </div>
+      </div>
     </div>
-    <div class="form-group t3js-login-password-section" id="t3-login-password-section">
-        <div class="form-control-wrap">
-            <div class="form-control-holder">
-                <input type="password" id="t3-password" name="p_field" value="{presetPassword}" placeholder="{f:translate(key: 'login.password')}" class="form-control input-login t3js-clearable t3js-login-password-field" required="required" data-rsa-encryption="t3-field-userident" />
-                <div class="form-notice-capslock hidden t3js-login-alert-capslock">
-                    <img src="{images.capslock}" width="14" height="14" alt="{f:translate(key: 'login.error.capslock')}" title="{f:translate(key: 'login.error.capslock')}" />
-                </div>
-            </div>
+  </div>
+  <div class="form-group t3js-login-password-section" id="t3-login-password-section">
+    <div class="form-control-wrap">
+      <div class="form-control-holder">
+        <input type="password" id="t3-password" name="p_field" value="{presetPassword}" aria-label="{f:translate(key: 'login.password')}" placeholder="{f:translate(key: 'login.password')}" class="form-control input-login t3js-clearable t3js-login-password-field" autocomplete="current-password" required="required" />
+        <div role="status" class="form-notice-capslock hidden t3js-login-alert-capslock">
+          <img aria-hidden="true" src="{images.capslock}" width="14" height="14" alt="" title="{f:translate(key: 'login.error.capslock')}" />
+          <span class="sr-only"><f:translate key="login.error.capslockStatus" /></span>
         </div>
+      </div>
     </div>
-    <div class="form-group t3js-login-yubikey-section" id="t3-login-yubikey-section">
-		<div class="input-group">
-			<input type="password" id="t3-yubikey" name="t3-yubikey" value="" placeholder="YubiKey" class="form-control input-login t3js-clearable t3js-login-yubikey-field">
-			<div class="input-group-addon">
-				<span class="t3yubikey"></span>
-			</div>
-		</div>
+  </div>
+  <div class="form-group t3js-login-yubikey-section" id="t3-login-yubikey-section">
+    <div class="input-group">
+      <input type="password" id="t3-yubikey" name="t3-yubikey" value="" aria-label="YubiKey" placeholder="YubiKey" class="form-control input-login t3js-clearable t3js-login-yubikey-field">
+      <div class="input-group-addon">
+        <span class="t3yubikey"></span>
+      </div>
     </div>
+  </div>
 </f:section>
