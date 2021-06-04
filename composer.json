@@ -38,12 +38,12 @@
   },
   "autoload": {
     "psr-4": {
-      "DERHANSEN\\SfYubikey\\": "Classes"
+      "Derhansen\\SfYubikey\\": "Classes"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "DERHANSEN\\SfYubikey\\": "Tests"
+      "Derhansen\\SfYubikey\\": "Tests"
     }
   },
   "replace": {

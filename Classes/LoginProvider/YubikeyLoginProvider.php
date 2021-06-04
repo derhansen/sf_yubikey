@@ -1,5 +1,5 @@
 <?php
-namespace DERHANSEN\SfYubikey\LoginProvider;
+namespace Derhansen\SfYubikey\LoginProvider;
 
 /*
  * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.

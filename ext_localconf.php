@@ -10,7 +10,7 @@ call_user_func(function () {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
         'sf_yubikey',
         'auth',
-        \DERHANSEN\SfYubikey\Authentication\YubikeyAuthService::class,
+        \Derhansen\SfYubikey\Authentication\YubikeyAuthService::class,
         [
             'title' => 'FE/BE YubiKey two-factor OTP Authentication',
             'description' => 'Two-factor authentication with a YubiKey OTP',
@@ -20,7 +20,7 @@ call_user_func(function () {
             'quality' => 80,
             'os' => '',
             'exec' => '',
-            'className' => \DERHANSEN\SfYubikey\Authentication\YubikeyAuthService::class
+            'className' => \Derhansen\SfYubikey\Authentication\YubikeyAuthService::class
         ]
     );
 
@@ -28,14 +28,14 @@ call_user_func(function () {
         ->get('sf_yubikey');
     if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] =
-            \DERHANSEN\SfYubikey\LoginProvider\YubikeyLoginProvider::class;
+            \Derhansen\SfYubikey\LoginProvider\YubikeyLoginProvider::class;
     }
 
     // Enable logging depending on extension settings
     if ($extConf['devlog']) {
         $logfileNamePrefix = 'sf_yubikey_' . date('d-m-Y') . '_';
         $namePart = substr(GeneralUtility::hmac($logfileNamePrefix, 'sfYubikey'), 0, 10);
-        $GLOBALS['TYPO3_CONF_VARS']['LOG']['DERHANSEN']['SfYubikey']['writerConfiguration'] = [
+        $GLOBALS['TYPO3_CONF_VARS']['LOG']['Derhansen']['SfYubikey']['writerConfiguration'] = [
             \TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
                 \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
                     'logFile' => 'typo3temp/var/log/' . $logfileNamePrefix . $namePart . '.log'

@@ -1,5 +1,5 @@
 <?php
-namespace DERHANSEN\SfYubikey\Command;
+namespace Derhansen\SfYubikey\Command;
 
 /*
  * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.
@@ -8,7 +8,7 @@ namespace DERHANSEN\SfYubikey\Command;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use DERHANSEN\SfYubikey\Service\YubikeyService;
+use Derhansen\SfYubikey\Service\YubikeyService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

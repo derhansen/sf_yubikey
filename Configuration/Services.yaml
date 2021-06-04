@@ -4,13 +4,13 @@ services:
     autoconfigure: true
     public: false
 
-  DERHANSEN\SfYubikey\:
+  Derhansen\SfYubikey\:
     resource: '../Classes/*'
 
-  DERHANSEN\SfYubikey\Authentication\YubikeyAuthService:
+  Derhansen\SfYubikey\Authentication\YubikeyAuthService:
     public: true
 
-  DERHANSEN\SfYubikey\Command\CheckYubiKeyOtpCommand:
+  Derhansen\SfYubikey\Command\CheckYubiKeyOtpCommand:
     tags:
       - name: 'console.command'
         command: 'sf_yubikey:checkyubikeyotp'

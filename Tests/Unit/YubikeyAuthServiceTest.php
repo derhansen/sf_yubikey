@@ -1,5 +1,5 @@
 <?php
-namespace DERHANSEN\SfYubikey\Tests\Unit;
+namespace Derhansen\SfYubikey\Tests\Unit;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -14,17 +14,14 @@ namespace DERHANSEN\SfYubikey\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
-use DERHANSEN\SfYubikey\Authentication\YubikeyAuthService;
-use DERHANSEN\SfYubikey\Service\YubikeyService;
-use DERHANSEN\SfYubikey\YubikeyAuth;
+use Derhansen\SfYubikey\Authentication\YubikeyAuthService;
+use Derhansen\SfYubikey\Service\YubikeyService;
 use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Log\Logger;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Testcase for class DERHANSEN\SfYubikey\YubikeyAuthService
+ * Testcase for class Derhansen\SfYubikey\YubikeyAuthService
  */
 class YubikeyAuthServiceTest extends UnitTestCase
 {

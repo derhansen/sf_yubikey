@@ -1,6 +1,6 @@
 <?php
 
-namespace DERHANSEN\SfYubikey\Tests\Unit;
+namespace Derhansen\SfYubikey\Tests\Unit;
 
 /*
  * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.
@@ -9,14 +9,14 @@ namespace DERHANSEN\SfYubikey\Tests\Unit;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use DERHANSEN\SfYubikey\Service\YubikeyService;
+use Derhansen\SfYubikey\Service\YubikeyService;
 use TYPO3\CMS\Core\Http\Client\GuzzleClientFactory;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Testcase for class DERHANSEN\SfYubikey\Service\YubikeyAuthService
+ * Testcase for class Derhansen\SfYubikey\Service\YubikeyService
  */
 class YubikeyServiceTest extends UnitTestCase
 {

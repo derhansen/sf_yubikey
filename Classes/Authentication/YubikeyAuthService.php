@@ -1,5 +1,5 @@
 <?php
-namespace DERHANSEN\SfYubikey\Authentication;
+namespace Derhansen\SfYubikey\Authentication;
 
 /*
  * This file is part of the Extension "sf_yubikey" for TYPO3 CMS.
@@ -8,7 +8,7 @@ namespace DERHANSEN\SfYubikey\Authentication;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use DERHANSEN\SfYubikey\Service\YubikeyService;
+use Derhansen\SfYubikey\Service\YubikeyService;
 use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
