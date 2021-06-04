@@ -18,21 +18,19 @@
 Configuring TYPO3 felogin extension to use YubiKey
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you have enables YubiKey Authentication for frontend users, you
-have to add an extra field to your felogin template.
+If you have enables YubiKey Authentication for frontend users, you have to add an extra field
+to your felogin template.
 
-First you have to configure felogin, so it uses an own template.
+First you have to overwrite the template `Login.html` of ext: felogin.
 
-styles.content.loginform.templateFile =
-fileadmin/templates/ext\_felogin/template.html
+Then you must add the following HTML to the template::
 
-Then you must add the following HTML to the ###TEMPLATE\_LOGIN###
-section right after the password field.::
-
- <div>
-   <label for="t3-yubikey">YubiKey</label>
-   <input type="password" id="t3-yubikey" name="t3-yubikey" value="" />
- </div>
+  <div>
+    <label>
+      Yubikey
+      <f:form.textfield name="t3-yubikey"/>
+    </label>
+  </div>
 
 Finally, you can add your own CSS Styles to the new field, so it looks
 like a YubiKey enabled input field.

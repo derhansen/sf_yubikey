@@ -23,6 +23,18 @@ A list of all changes can be found on GitHub
 
 Important Changes
 =================
-Since version 1.0.0, YubiKey OTP validation is only handled through the bundled class **YubikeyAuth**.
+
+Version 1.0.0
+-------------
+YubiKey OTP validation is only handled through the bundled class **YubikeyAuth**.
 The usage of PEAR classes has been removed.
 
+
+Version 4.0.0
+-------------
+The YubiKey validation is performed using the class **YubikeyService** which uses
+`psr/http-client` and `psr/http-factory` for requests. The `disableSslVerification` setting has been
+removed, since this can be configured global in TYPO3 HTTP client settings.
+
+The extension setting `yubikeyApiUrl` has been renamed to `yubikeyApiUrls`. Users must adapt this
+setting manually if configured.
