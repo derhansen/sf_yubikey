@@ -33,17 +33,14 @@ call_user_func(function () {
 
     // Enable logging depending on extension settings
     if ($extConf['devlog']) {
-        $logLevel = \TYPO3\CMS\Core\Log\LogLevel::DEBUG;
-    } else {
-        $logLevel = \TYPO3\CMS\Core\Log\LogLevel::INFO;
-    }
-    $logfileNamePrefix = 'sf_yubikey_' . date('d-m-Y') . '_';
-    $namePart = substr(GeneralUtility::hmac($logfileNamePrefix, 'sfYubikey'), 0, 10);
-    $GLOBALS['TYPO3_CONF_VARS']['LOG']['DERHANSEN']['SfYubikey']['writerConfiguration'] = [
-        $logLevel => [
-            \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-                'logFile' => 'typo3temp/var/log/' . $logfileNamePrefix . $namePart . '.log'
+        $logfileNamePrefix = 'sf_yubikey_' . date('d-m-Y') . '_';
+        $namePart = substr(GeneralUtility::hmac($logfileNamePrefix, 'sfYubikey'), 0, 10);
+        $GLOBALS['TYPO3_CONF_VARS']['LOG']['DERHANSEN']['SfYubikey']['writerConfiguration'] = [
+            \TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
+                \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
+                    'logFile' => 'typo3temp/var/log/' . $logfileNamePrefix . $namePart . '.log'
+                ],
             ],
-        ],
-    ];
+        ];
+    }
 });
