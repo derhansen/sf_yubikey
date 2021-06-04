@@ -16,7 +16,7 @@ call_user_func(function () {
     $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_sfyubikey_yubikey_id'] = [
         'label' => 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang_db.xlf:users.tx_sfyubikey_yubikey_id',
         'type' => 'user',
-        'userFunc' => \DERHANSEN\SfYubikey\Hooks\UserSettings::class . '->user_yubikeyId',
+        'userFunc' => \DERHANSEN\SfYubikey\Hooks\UserSettings::class . '->userYubikeyId',
         'table' => 'be_users'
     ];
 
