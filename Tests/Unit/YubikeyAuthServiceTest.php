@@ -16,6 +16,7 @@ namespace Derhansen\SfYubikey\Tests\Unit;
 
 use Derhansen\SfYubikey\Authentication\YubikeyAuthService;
 use Derhansen\SfYubikey\Service\YubikeyService;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -25,6 +26,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class YubikeyAuthServiceTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     protected $resetSingletonInstances = true;
 
     /**
