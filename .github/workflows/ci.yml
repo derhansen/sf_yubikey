@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        typo3: [^11.2, dev-master]
-        php: ['7.4']
+        typo3: [^11.4, dev-master]
+        php: ['7.4', '8.0']
 
     steps:
       - uses: actions/checkout@v1
