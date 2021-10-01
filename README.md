@@ -22,6 +22,16 @@ More information about the YubiKey, Yubico and the YubiCloud OTP validation serv
 
 You can find a detailed documentation in the Documentation folder of the TYPO3 extension.
 
+## Versions
+
+| Version             | TYPO3       | PHP       | Support/Development                     |
+| ------------------- | ----------- | ----------|---------------------------------------- |
+| 4.x                 | 11.5        | >= 7.4    | Features, Bugfixes, Security Updates    |
+| 3.x                 | 9.5 - 10.4  | 7.2 - 7.4 | Bugfixes, Security Updates              |
+| 2.x                 | 7.6 - 9.5   | 5.5 - 7.4 | Support dropped                         |
+| 1.x                 | 6.2 - 7.6   | 5.5 - 7.2 | Support dropped                         |
+| 0.x                 | 4.5 - 6.2   | 5.2 - 5.6 | Support dropped                         |
+
 ## Support and updates
 
 The extension is hosted on GitHub. Please report feedback, bugs and changerequest directly at https://github.com/derhansen/sf_yubikey
