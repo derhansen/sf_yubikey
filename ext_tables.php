@@ -3,9 +3,6 @@
 defined('TYPO3') or die();
 
 call_user_func(function () {
-    // Add css file for YubiKey backend login
-    $GLOBALS['TBE_STYLES']['stylesheet2'] = '../typo3conf/ext/sf_yubikey/Resources/Public/Css/sf_yubikey.css';
-
     // Add YubiKey fields to user settings
     $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_sfyubikey_yubikey_enable'] = [
         'label' => 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang_db.xlf:users.tx_sfyubikey_yubikey_enable',
