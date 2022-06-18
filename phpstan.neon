@@ -1,0 +1,15 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 1
+    paths:
+        - Classes/
+        - Configuration/
+
+    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: true
+    checkGenericClassInNonGenericObjectType: false
+
+    bootstrapFiles:
+        - %rootDir%/../../typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php

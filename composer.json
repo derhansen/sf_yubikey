@@ -36,7 +36,10 @@
     "typo3/testing-framework": "^6.8.2",
     "phpspec/prophecy": "^1.13",
     "phpspec/prophecy-phpunit": "^2.0",
-    "overtrue/phplint": "^2.3"
+    "overtrue/phplint": "^2.3",
+    "saschaegerer/phpstan-typo3": "^1.1.2",
+    "phpstan/extension-installer": "^1.1",
+    "jangregor/phpstan-prophecy": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -56,7 +59,8 @@
     "bin-dir": ".Build/bin",
     "allow-plugins": {
       "typo3/class-alias-loader": true,
-      "typo3/cms-composer-installers": true
+      "typo3/cms-composer-installers": true,
+      "phpstan/extension-installer": true
     }
   },
   "scripts": {
