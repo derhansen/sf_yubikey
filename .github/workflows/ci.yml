@@ -25,11 +25,6 @@ jobs:
           php-version: ${{ matrix.env.php }}
           tools: composer:v2
 
-      - name: Set up PHP Version
-        run: |
-          sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
-          php -v
-
       - name: Update Composer
         run: |
           sudo composer self-update
