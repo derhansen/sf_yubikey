@@ -1,4 +1,5 @@
 <?php
+
 namespace Derhansen\SfYubikey\Tests\Unit;
 
 /*
@@ -41,88 +42,88 @@ class YubikeyAuthServiceTest extends UnitTestCase
             'YubiKey not configured' => [
                 [
                     'username' => 'testuser',
-                    'tx_sfyubikey_yubikey_enable' => false
+                    'tx_sfyubikey_yubikey_enable' => false,
                 ],
                 '',
                 false,
                 'login',
-                100
+                100,
             ],
             'YubiKey not enabled' => [
                 [
                     'username' => 'testuser',
-                    'tx_sfyubikey_yubikey_enable' => false
+                    'tx_sfyubikey_yubikey_enable' => false,
                 ],
                 '',
                 false,
                 'login',
-                100
+                100,
             ],
             'No YubiKey given for YubiKey enabled user' => [
                 [
                     'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
-                    'tx_sfyubikey_yubikey_id' => 'yubikey00001'
+                    'tx_sfyubikey_yubikey_id' => 'yubikey00001',
                 ],
                 '',
                 false,
                 'login',
-                0
+                0,
             ],
             'Given YubiKey does not belong to user' => [
                 [
                     'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
-                    'tx_sfyubikey_yubikey_id' => 'yubikey00001'
+                    'tx_sfyubikey_yubikey_id' => 'yubikey00001',
                 ],
                 'yubikey00000someOTPvalue',
                 false,
                 'login',
-                0
+                0,
             ],
             'Given YubiKey could not be validated' => [
                 [
                     'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
-                    'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars'
+                    'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars',
                 ],
                 'yubikey00001someOTPvalue',
                 false,
                 'login',
-                0
+                0,
             ],
             'Given YubiKey validated successfully' => [
                 [
                     'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
-                    'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars'
+                    'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars',
                 ],
                 'yubikey00001someOTPvalue',
                 true,
                 'login',
-                100
+                100,
             ],
             'Given YubiKey validated successfully for user having multiple yubikeys' => [
                 [
                     'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
-                    'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars' . chr(10) . 'yubikey00002ignoredchars'
+                    'tx_sfyubikey_yubikey_id' => 'yubikey00001ignoredchars' . chr(10) . 'yubikey00002ignoredchars',
                 ],
                 'yubikey00002someOTPvalue',
                 true,
                 'login',
-                100
+                100,
             ],
             'No YubiKey given, but status != login' => [
                 [
                     'username' => 'testuser',
                     'tx_sfyubikey_yubikey_enable' => true,
-                    'tx_sfyubikey_yubikey_id' => 'yubikey00001'
+                    'tx_sfyubikey_yubikey_id' => 'yubikey00001',
                 ],
                 '',
                 false,
                 'other-status',
-                100
+                100,
             ],
         ];
     }
@@ -130,7 +131,6 @@ class YubikeyAuthServiceTest extends UnitTestCase
     /**
      * @test
      * @dataProvider authUserDataProvider
-     * @return void
      */
     public function authUserReturnsExpectedReturnCode(
         $userData,
@@ -144,7 +144,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
         $yubikeyServiceMock = $this->getMockBuilder(YubikeyService::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $yubikeyServiceMock->expects($this->any())->method('verifyOtp')->willReturn($checkOtpResult);
+        $yubikeyServiceMock->expects(self::any())->method('verifyOtp')->willReturn($checkOtpResult);
 
         $authService = new YubikeyAuthService($yubikeyServiceMock);
         $pObjProphecy = $this->prophesize(AbstractUserAuthentication::class);
@@ -156,12 +156,12 @@ class YubikeyAuthServiceTest extends UnitTestCase
             [
                 'uident_text' => 'password',
                 'uname' => 'username',
-                'status' => $loginStatus
+                'status' => $loginStatus,
             ],
             [
                 'db_user' => ['table' => 'be_users'],
                 'REMOTE_HOST' => 'localhost',
-                'REMOTE_ADDR' => '127.0.0.1'
+                'REMOTE_ADDR' => '127.0.0.1',
             ],
             $pObjProphecy->reveal()
         );
@@ -172,7 +172,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
         }
 
         $retCode = $authService->authUser($userData);
-        $this->assertEquals($expectedReturnCode, $retCode);
+        self::assertEquals($expectedReturnCode, $retCode);
     }
 
     protected function setExtensionConfig(): void

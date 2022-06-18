@@ -33,17 +33,17 @@ class YubikeyServiceTest extends UnitTestCase
             'valid response' => [
                 'h=' . $h . "\n" . 't=' . $t . "\n" . 'otp=' . $otp . "\n" . 'nonce=' . $nonce . "\n" . 'status=' . $status,
                 $clientKey,
-                true
+                true,
             ],
             'wrong api key' => [
                 'h=' . $h . "\n" . 't=' . $t . "\n" . 'otp=' . $otp . "\n" . 'nonce=' . $nonce . "\n" . 'status=' . $status,
                 'invalid',
-                false
+                false,
             ],
             'status modified' => [
                 'h=' . $h . "\n" . 't=' . $t . "\n" . 'otp=' . $otp . "\n" . 'nonce=' . $nonce . "\n" . 'status=' . 'NOK',
                 $clientKey,
-                false
+                false,
             ],
         ];
     }
@@ -64,7 +64,7 @@ class YubikeyServiceTest extends UnitTestCase
         $yubikeyAuthService = GeneralUtility::makeInstance(
             YubikeyService::class,
             GuzzleClientFactory::getClient(),
-            new RequestFactory
+            new RequestFactory()
         );
         self::assertSame($expected, $yubikeyAuthService->verifyHmac($response, $apiKey));
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Derhansen\SfYubikey\Authentication;
 
 /*
@@ -90,7 +91,7 @@ class YubikeyAuthService extends AbstractAuthenticationService
                         [
                             $this->authInfo['REMOTE_ADDR'],
                             $this->authInfo['REMOTE_HOST'],
-                            $this->login['uname']
+                            $this->login['uname'],
                         ]
                     );
                     $ret = 0;
@@ -116,7 +117,7 @@ class YubikeyAuthService extends AbstractAuthenticationService
                     [
                         $this->authInfo['REMOTE_ADDR'],
                         $this->authInfo['REMOTE_HOST'],
-                        $this->login['uname']
+                        $this->login['uname'],
                     ]
                 );
             }

@@ -20,7 +20,7 @@ call_user_func(function () {
             'quality' => 80,
             'os' => '',
             'exec' => '',
-            'className' => \Derhansen\SfYubikey\Authentication\YubikeyAuthService::class
+            'className' => \Derhansen\SfYubikey\Authentication\YubikeyAuthService::class,
         ]
     );
 
@@ -38,7 +38,7 @@ call_user_func(function () {
         $GLOBALS['TYPO3_CONF_VARS']['LOG']['Derhansen']['SfYubikey']['writerConfiguration'] = [
             \TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
                 \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-                    'logFile' => 'typo3temp/var/log/' . $logfileNamePrefix . $namePart . '.log'
+                    'logFile' => 'typo3temp/var/log/' . $logfileNamePrefix . $namePart . '.log',
                 ],
             ],
         ];

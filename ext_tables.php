@@ -7,14 +7,14 @@ call_user_func(function () {
     $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_sfyubikey_yubikey_enable'] = [
         'label' => 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang_db.xlf:users.tx_sfyubikey_yubikey_enable',
         'type' => 'check',
-        'table' => 'be_users'
+        'table' => 'be_users',
     ];
 
     $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_sfyubikey_yubikey_id'] = [
         'label' => 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang_db.xlf:users.tx_sfyubikey_yubikey_id',
         'type' => 'user',
         'userFunc' => \Derhansen\SfYubikey\Hooks\UserSettings::class . '->userYubikeyId',
-        'table' => 'be_users'
+        'table' => 'be_users',
     ];
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToUserSettings(

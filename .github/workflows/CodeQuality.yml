@@ -1,4 +1,4 @@
-name: CI
+name: Code Quality Checks
 
 on: [push, pull_request]
 
@@ -25,23 +25,23 @@ jobs:
           php-version: ${{ matrix.env.php }}
           tools: composer:v2
 
-      - name: Set up PHP Version
-        run: |
-          sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
-          php -v
-
-      - name: Update Composer
-        run: |
-          sudo composer self-update
-          composer --version
-
       - name: Validate composer.json and composer.lock
         run: composer validate
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
 
       - name: Install composer dependencies
         run: |
           composer install --no-progress
 
-      - name: Unit Tests
+      - name: PHP lint
         run: |
-          .Build/bin/phpunit
+          .Build/bin/phplint 
+
+      - name: Validate PHP coding guidelines
+        run: |
+          .Build/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no

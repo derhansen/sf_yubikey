@@ -24,7 +24,8 @@
   ],
   "require": {
     "php": "^7.4 || ^8.0",
-    "typo3/cms-core": "^11.5"
+    "typo3/cms-core": "^11.5",
+    "friendsofphp/php-cs-fixer": "^3.8"
   },
   "require-dev": {
     "typo3/cms-backend": "^11.5",
@@ -52,18 +53,16 @@
   },
   "config": {
     "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin"
+    "bin-dir": ".Build/bin",
+    "allow-plugins": {
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    }
   },
   "scripts": {
     "post-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/sf_yubikey ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/sf_yubikey"
-    ],
-    "test:php:lint": [
-      "phplint"
-    ],
-    "test:php:unit": [
-      "phpunit"
     ]
   },
   "extra": {

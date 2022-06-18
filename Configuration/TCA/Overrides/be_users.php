@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3') or die();
 
 // Prepare new columns for be_users table
@@ -14,16 +15,16 @@ $tempColumns = [
                 [
                     0 => '',
                     1 => '',
-                ]
+                ],
             ],
-        ]
+        ],
     ],
     'tx_sfyubikey_yubikey_id' => [
         'exclude' => 0,
         'label' => 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang_db.xlf:users.tx_sfyubikey_yubikey_id',
         'config' => [
-            'type' => 'text'
-        ]
+            'type' => 'text',
+        ],
     ],
 ];
 

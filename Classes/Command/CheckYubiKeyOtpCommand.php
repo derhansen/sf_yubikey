@@ -1,4 +1,5 @@
 <?php
+
 namespace Derhansen\SfYubikey\Command;
 
 /*
@@ -14,8 +15,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class CheckYubiKeyOtpCommand
@@ -60,9 +59,8 @@ class CheckYubiKeyOtpCommand extends Command
         if ($this->yubikeyService->verifyOtp($otp) === true) {
             $io->success('OK: ' . $otp . ' has been successfully validated.');
             return 0;
-        } else {
-            $io->error($otp . '  could not be validated. Reasons: ' . implode(' / ', $this->yubikeyService->getErrors()));
-            return 1;
         }
+        $io->error($otp . '  could not be validated. Reasons: ' . implode(' / ', $this->yubikeyService->getErrors()));
+        return 1;
     }
 }
