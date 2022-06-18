@@ -1,1 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method Derhansen\\\\SfYubikey\\\\Command\\\\CheckYubiKeyOtpCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/Command/CheckYubiKeyOtpCommand.php
 
+		-
+			message: "#^Method Derhansen\\\\SfYubikey\\\\LoginProvider\\\\YubikeyLoginProvider\\:\\:render\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/LoginProvider/YubikeyLoginProvider.php
