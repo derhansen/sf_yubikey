@@ -23,7 +23,7 @@ class UserSettings
     {
         return '<textarea id="field_tx_sfyubikey_yubikey_id" name="data[be_users][tx_sfyubikey_yubikey_id]"
             rows="5"  class="form-control t3js-formengine-textarea formengine-textarea">' .
-            htmlspecialchars($GLOBALS['BE_USER']->user['tx_sfyubikey_yubikey_id']) . '</textarea>';
+            htmlspecialchars($GLOBALS['BE_USER']->user['tx_sfyubikey_yubikey_id'] ?? '') . '</textarea>';
     }
 
     /**

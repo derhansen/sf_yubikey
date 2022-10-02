@@ -39,9 +39,9 @@ class YubikeyService
         $this->requestFactory = $requestFactory;
         $extConfig = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
 
-        $this->yubikeyClientId = trim($extConfig['yubikeyClientId']);
-        $this->yubikeyClientKey = trim($extConfig['yubikeyClientKey']);
-        $this->yubikeyApiUrl = GeneralUtility::trimExplode(';', $extConfig['yubikeyApiUrls'], true);
+        $this->yubikeyClientId = trim($extConfig['yubikeyClientId'] ?? '');
+        $this->yubikeyClientKey = trim($extConfig['yubikeyClientKey'] ?? '');
+        $this->yubikeyApiUrl = GeneralUtility::trimExplode(';', $extConfig['yubikeyApiUrls'] ?? '', true);
 
         $this->initialized = $this->yubikeyClientId !== '' && $this->yubikeyClientKey !== '' &&
             !empty($this->yubikeyApiUrl);
