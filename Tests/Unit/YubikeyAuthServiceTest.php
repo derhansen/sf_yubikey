@@ -17,9 +17,8 @@ namespace Derhansen\SfYubikey\Tests\Unit;
 
 use Derhansen\SfYubikey\Authentication\YubikeyAuthService;
 use Derhansen\SfYubikey\Service\YubikeyService;
-use Prophecy\PhpUnit\ProphecyTrait;
-use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
-use TYPO3\CMS\Core\Log\Logger;
+use Psr\Log\NullLogger;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -27,16 +26,12 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class YubikeyAuthServiceTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
-    protected $resetSingletonInstances = true;
+    protected bool $resetSingletonInstances = true;
 
     /**
      * Data provider for authUserReturnsExpectedReturnCode
-     *
-     * @return array
      */
-    public function authUserDataProvider()
+    public function authUserDataProvider(): array
     {
         return [
             'YubiKey not configured' => [
@@ -133,12 +128,12 @@ class YubikeyAuthServiceTest extends UnitTestCase
      * @dataProvider authUserDataProvider
      */
     public function authUserReturnsExpectedReturnCode(
-        $userData,
-        $yubikeyOtp,
-        $checkOtpResult,
-        $loginStatus,
-        $expectedReturnCode
-    ) {
+        array $userData,
+        string $yubikeyOtp,
+        bool $checkOtpResult,
+        string $loginStatus,
+        int $expectedReturnCode
+    ): void {
         $this->setExtensionConfig();
 
         $yubikeyServiceMock = $this->getMockBuilder(YubikeyService::class)
@@ -147,10 +142,8 @@ class YubikeyAuthServiceTest extends UnitTestCase
         $yubikeyServiceMock->expects(self::any())->method('verifyOtp')->willReturn($checkOtpResult);
 
         $authService = new YubikeyAuthService($yubikeyServiceMock);
-        $pObjProphecy = $this->prophesize(AbstractUserAuthentication::class);
-        $pObjProphecy->loginType = 'BE';
-        $loggerProphecy = $this->prophesize(Logger::class);
-        $authService->setLogger($loggerProphecy->reveal());
+        $mockBackendUserAuthentication = $this->createMock(BackendUserAuthentication::class);
+        $authService->setLogger(new NullLogger());
         $authService->initAuth(
             'authUserBE',
             [
@@ -163,7 +156,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
                 'REMOTE_HOST' => 'localhost',
                 'REMOTE_ADDR' => '127.0.0.1',
             ],
-            $pObjProphecy->reveal()
+            $mockBackendUserAuthentication
         );
 
         // Set YubiKey OTP GET variable if given

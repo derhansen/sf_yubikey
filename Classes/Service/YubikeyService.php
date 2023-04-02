@@ -16,10 +16,11 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Provides YubiKey authentication using the yubico YubiCloud
+ * Provides YubiKey authentication using the Yubico YubiCloud
  */
 class YubikeyService
 {
@@ -49,10 +50,6 @@ class YubikeyService
 
     /**
      * Verify HMAC-SHA1 signature on result received from Yubico server
-     *
-     * @param string $response
-     * @param string $yubicoClientKey
-     * @return bool
      */
     public function verifyHmac(string $response, string $yubicoClientKey): bool
     {
@@ -92,15 +89,12 @@ class YubikeyService
 
     /**
      * Call the Auth API at Yubico server
-     *
-     * @param string $otp
-     * @return bool
      */
     public function verifyOtp(string $otp): bool
     {
         $requestParams['id'] = $this->yubikeyClientId;
         $requestParams['otp'] = trim($otp);
-        $requestParams['nonce'] = md5(uniqid((string)rand()));
+        $requestParams['nonce'] = md5((new Random())->generateRandomHexString(32));
         ksort($requestParams);
         $parameters = '';
         foreach ($requestParams as $p => $v) {

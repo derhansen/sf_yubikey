@@ -2,20 +2,10 @@
     padding-left: 20px;
 }
 
-#t3-login-yubikey-section input.t3-yubikey {
-    background-image: url('../Images/yubico.svg');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-}
-
 .t3yubikey {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     background-image: url('../Images/yubico.svg');
     background-repeat: no-repeat;
     display: block;
-}
-
-.t3js-login-yubikey-field {
-    height: 41px;
 }

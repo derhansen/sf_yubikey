@@ -35,9 +35,6 @@ class YubikeyAuthService extends AbstractAuthenticationService
      *  - 0 - authentication failure
      *  - 100 - just go on. User is not authenticated but there is still no reason to stop
      *  - 200 - the service was able to authenticate the user
-     *
-     * @param array $user Array containing the userdata
-     * @return int authentication statuscode, one of 0, 100 and 200
      */
     public function authUser(array $user): int
     {
@@ -61,7 +58,7 @@ class YubikeyAuthService extends AbstractAuthenticationService
             );
 
             // Get Yubikey OTP
-            $yubikeyOtp = GeneralUtility::_GP('t3-yubikey');
+            $yubikeyOtp = (string)($_POST['t3-yubikey'] ?? $_GET['t3-yubikey'] ?? '');
             $this->logger->debug('Yubikey: ' . $yubikeyOtp);
             $tempYubiKeyIds = GeneralUtility::trimExplode(
                 chr(10),
@@ -73,7 +70,7 @@ class YubikeyAuthService extends AbstractAuthenticationService
                 $yubiKeyIds[] = substr($tempYubiKeyId, 0, 12);
             }
             // Check, if Yubikey-ID does match with users Yubikey-ID
-            if (in_array(substr($yubikeyOtp, 0, 12), $yubiKeyIds)) {
+            if (in_array(substr($yubikeyOtp, 0, 12), $yubiKeyIds, true)) {
                 $clientId = $this->extConf['yubikeyClientId'] ?? 'none';
                 $this->logger->debug('Yubikey config - ClientId: ' . $clientId);
 
@@ -135,7 +132,7 @@ class YubikeyAuthService extends AbstractAuthenticationService
             $yubikeyCheckEnabled = true;
         } elseif (isset($this->extConf['yubikeyEnableFE']) &&
             (bool)$this->extConf['yubikeyEnableFE'] &&
-            $this->pObj->loginType == 'FE'
+            $this->pObj->loginType === 'FE'
         ) {
             $yubikeyCheckEnabled = true;
         }

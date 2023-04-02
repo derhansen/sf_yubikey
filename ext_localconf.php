@@ -32,7 +32,7 @@ call_user_func(function () {
     }
 
     // Enable logging depending on extension settings
-    if ($extConf['devlog']) {
+    if ($extConf['devlog'] ?? false) {
         $logfileNamePrefix = 'sf_yubikey_' . date('d-m-Y') . '_';
         $namePart = substr(GeneralUtility::hmac($logfileNamePrefix, 'sfYubikey'), 0, 10);
         $GLOBALS['TYPO3_CONF_VARS']['LOG']['Derhansen']['SfYubikey']['writerConfiguration'] = [

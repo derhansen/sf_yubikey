@@ -11,7 +11,6 @@ namespace Derhansen\SfYubikey\Command;
 
 use Derhansen\SfYubikey\Service\YubikeyService;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -30,27 +29,9 @@ class CheckYubiKeyOtpCommand extends Command
     }
 
     /**
-     * Configuring the command options
-     */
-    public function configure()
-    {
-        $this
-            ->setDescription('Checks the given OTP against the configured YubiKey endpoints')
-            ->addArgument(
-                'otp',
-                InputArgument::REQUIRED,
-                'The YubiKey OTP'
-            );
-    }
-
-    /**
      * Execute the command
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|void|null
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
@@ -58,9 +39,10 @@ class CheckYubiKeyOtpCommand extends Command
         $otp = $input->getArgument('otp');
         if ($this->yubikeyService->verifyOtp($otp) === true) {
             $io->success('OK: ' . $otp . ' has been successfully validated.');
-            return 0;
+            return self::SUCCESS;
         }
+
         $io->error($otp . '  could not be validated. Reasons: ' . implode(' / ', $this->yubikeyService->getErrors()));
-        return 1;
+        return self::FAILURE;
     }
 }
