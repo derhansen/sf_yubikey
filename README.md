@@ -24,13 +24,14 @@ You can find a detailed documentation in the Documentation folder of the TYPO3 e
 
 ## Versions
 
-| Version             | TYPO3       | PHP       | Support/Development                     |
-| ------------------- | ----------- | ----------|---------------------------------------- |
-| 4.x                 | 11.5        | >= 7.4    | Features, Bugfixes, Security Updates    |
-| 3.x                 | 9.5 - 10.4  | 7.2 - 7.4 | Bugfixes, Security Updates              |
-| 2.x                 | 7.6 - 9.5   | 5.5 - 7.4 | Support dropped                         |
-| 1.x                 | 6.2 - 7.6   | 5.5 - 7.2 | Support dropped                         |
-| 0.x                 | 4.5 - 6.2   | 5.2 - 5.6 | Support dropped                         |
+| Version | TYPO3      | PHP       | Support/Development                  |
+|---------|------------|-----------|--------------------------------------|
+| 5.x     | 12.4       | >= 8.1    | Features, Bugfixes, Security Updates |
+| 4.x     | 11.5       | 7.4 - 8.x | Features, Bugfixes, Security Updates |
+| 3.x     | 9.5 - 10.4 | 7.2 - 7.4 | Security Updates                     |
+| 2.x     | 7.6 - 9.5  | 5.5 - 7.4 | Support dropped                      |
+| 1.x     | 6.2 - 7.6  | 5.5 - 7.2 | Support dropped                      |
+| 0.x     | 4.5 - 6.2  | 5.2 - 5.6 | Support dropped                      |
 
 ## Support and updates
 
