@@ -15,8 +15,8 @@ $tempColumns = [
             'default' => 0,
             'items' => [
                 [
-                    0 => '',
-                    1 => '',
+                    'label' => '',
+                    'invertStateDisplay' => false,
                 ],
             ],
         ],
