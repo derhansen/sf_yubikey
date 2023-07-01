@@ -7,6 +7,3 @@ parameters:
     checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: true
     checkGenericClassInNonGenericObjectType: false
-
-    bootstrapFiles:
-        - %rootDir%/../../typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php
