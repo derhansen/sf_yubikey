@@ -77,7 +77,7 @@ class YubikeyService
             $datastring !== '' ? $datastring .= '&' : $datastring .= '';
             $datastring .= $key . '=' . $value;
         }
-        $hmac = base64_encode(hash_hmac('sha1', mb_convert_encoding($datastring, 'UTF-8'), base64_decode($yubicoClientKey), true));
+        $hmac = base64_encode(hash_hmac('sha1', $datastring, base64_decode($yubicoClientKey), true));
 
         $valid = $hmac === $signature;
         if (!$valid) {
