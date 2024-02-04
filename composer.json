@@ -22,22 +22,8 @@
   "license": [
     "GPL-2.0-or-later"
   ],
-  "prefer-stable": true,
   "require": {
     "typo3/cms-core": "^12.4"
-  },
-  "require-dev": {
-    "typo3/cms-composer-installers": "^5.0",
-    "typo3/cms-backend": "^12.4",
-    "typo3/cms-frontend": "^12.4",
-    "typo3/cms-extbase": "^12.4",
-    "typo3/cms-fluid": "^12.4",
-    "friendsofphp/php-cs-fixer": "^3.12.0",
-    "typo3/testing-framework": "^8.0.0 || dev-main",
-    "overtrue/phplint": "^9.0.0",
-    "saschaegerer/phpstan-typo3": "^1.1.2",
-    "phpstan/extension-installer": "^1.1",
-    "jangregor/phpstan-prophecy": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -49,29 +35,9 @@
       "Derhansen\\SfYubikey\\": "Tests"
     }
   },
-  "replace": {
-    "typo3-ter/sf-yubikey": "self.version"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin",
-    "allow-plugins": {
-      "typo3/class-alias-loader": true,
-      "typo3/cms-composer-installers": true,
-      "phpstan/extension-installer": true
-    }
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/sf_yubikey ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/sf_yubikey"
-    ]
-  },
   "extra": {
     "typo3/cms": {
-      "extension-key": "sf_yubikey",
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web"
+      "extension-key": "sf_yubikey"
     }
   }
 }

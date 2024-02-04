@@ -20,7 +20,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class YubikeyServiceTest extends UnitTestCase
 {
-    public function verifyHmacDataProvider(): array
+    public static function verifyHmacDataProvider(): array
     {
         $h = 'lHVE5KrfuhWg36MttJOwxWqa/AY=';
         $t = '2021-02-13T05:20:11Z0768';

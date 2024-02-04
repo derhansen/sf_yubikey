@@ -31,7 +31,7 @@ class YubikeyAuthServiceTest extends UnitTestCase
     /**
      * Data provider for authUserReturnsExpectedReturnCode
      */
-    public function authUserDataProvider(): array
+    public static function authUserDataProvider(): array
     {
         return [
             'YubiKey not configured' => [

@@ -1,9 +1,8 @@
 # PHP Storm, other java IDE's
 .idea
-atlassian-ide-plugin.xml
-.Build
+.Build/public
+.Build/vendor
+.Build/var/
 composer.lock
-.phplint.cache
-.phpunit.result.cache
 .php-cs-fixer.cache
-var/
+.phpunit.cache
