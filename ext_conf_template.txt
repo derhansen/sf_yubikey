@@ -5,13 +5,10 @@ yubikeyEnableBE = 1
 yubikeyEnableFE = 0
 
 # cat=basic; type=string; label=Yubico Client ID: Get a Client ID and Client Key at https://upgrade.yubico.com/getapikey/
-yubikeyClientId = 
+yubikeyClientId =
 
-# cat=basic; type=string; label=Yubico Client Key: 
+# cat=basic; type=string; label=Yubico Client Key:
 yubikeyClientKey =
 
 # cat=basic; type=string; label=Yubico API Url: Separate multiple endpoints by semicolon
 yubikeyApiUrls = https://api.yubico.com/wsapi/2.0/verify;https://api2.yubico.com/wsapi/2.0/verify;https://api3.yubico.com/wsapi/2.0/verify;https://api4.yubico.com/wsapi/2.0/verify;https://api5.yubico.com/wsapi/2.0/verify
-
-# cat=basic/enable; type=boolean; label=Devlog: Write Debug Information to a logfile
-devlog = 0
