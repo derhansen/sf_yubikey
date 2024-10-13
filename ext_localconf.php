@@ -2,14 +2,14 @@
 
 defined('TYPO3') or die();
 
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Derhansen\SfYubikey\Authentication\YubikeyAuthService;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 // Register the auth service
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
+ExtensionManagementUtility::addService(
     'sf_yubikey',
     'auth',
-    \Derhansen\SfYubikey\Authentication\YubikeyAuthService::class,
+    YubikeyAuthService::class,
     [
         'title' => 'FE/BE YubiKey two-factor OTP Authentication',
         'description' => 'Two-factor authentication with a YubiKey OTP',
@@ -19,13 +19,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
         'quality' => 80,
         'os' => '',
         'exec' => '',
-        'className' => \Derhansen\SfYubikey\Authentication\YubikeyAuthService::class,
+        'className' => YubikeyAuthService::class,
     ]
 );
-
-$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)
-    ->get('sf_yubikey');
-if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] =
-        \Derhansen\SfYubikey\LoginProvider\YubikeyLoginProvider::class;
-}

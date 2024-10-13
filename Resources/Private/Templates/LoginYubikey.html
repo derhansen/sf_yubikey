@@ -1,6 +1,10 @@
-<f:layout name="Login" />
+<html
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true"
+>
 
-<f:comment>Use new template!</f:comment>
+<f:layout name="Login" />
 
 <f:section name="loginFormFields">
     <f:be.pageRenderer
@@ -12,29 +16,23 @@
     <div class="form-group t3js-login-username-section" id="t3-login-username-section">
         <div class="form-control-wrap">
             <div class="form-control-holder">
-                <input
-                    type="text"
-                    id="t3-username"
-                    name="username"
-                    value="{presetUsername}"
-                    aria-label="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.username')}"
-                    placeholder="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.username')}"
-                    class="form-control input-login t3js-clearable t3js-login-username-field"
-                    autofocus="autofocus"
-                    autocomplete="username"
-                    required="required"
-                    spellcheck="false"
-                />
-                <div role="status" class="form-notice-capslock hidden t3js-login-alert-capslock">
-                    <img
-                        aria-hidden="true"
-                        src="{images.capslock}"
-                        width="14"
-                        height="14"
-                        alt=""
-                        title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslock')}"
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="t3-username"
+                        name="username"
+                        value="{presetUsername}"
+                        aria-label="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.username')}"
+                        placeholder="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.username')}"
+                        class="form-control form-control-clearable input-login t3js-clearable t3js-capslockwarning t3js-login-username-field"
+                        autofocus="autofocus"
+                        autocomplete="username"
+                        required="required"
+                        spellcheck="false"
+                        data-capslockwarning-title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslock')}"
+                        data-capslockwarning-message="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslockStatus')}"
+                        data-clearable-label="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.inputfield.clearButton.title')}"
                     />
-                    <span class="visually-hidden"><f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslockStatus" /></span>
                 </div>
             </div>
         </div>
@@ -50,35 +48,22 @@
                         value="{presetPassword}"
                         aria-label="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.password')}"
                         placeholder="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.password')}"
-                        class="form-control input-login t3js-clearable t3js-login-password-field"
+                        class="form-control input-login t3js-clearable t3js-capslockwarning t3js-login-password-field"
                         autocomplete="current-password"
                         required="required"
                         spellcheck="false"
+                        data-capslockwarning-title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslock')}"
+                        data-capslockwarning-message="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslockStatus')}"
+                        data-clearable-label="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.inputfield.clearButton.title')}"
+                        data-passwordtoggle-label="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.togglePassword')}"
                     />
-                    <button type="button"
-                            class="t3js-login-toggle-password btn btn-outline-secondary hidden"
-                            aria-label="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.togglePassword')}"
-                    >
-                        <core:icon identifier="actions-eye" size="small" />
-                    </button>
-                    <div role="status" class="form-notice-capslock hidden t3js-login-alert-capslock">
-                        <img
-                            aria-hidden="true"
-                            src="{images.capslock}"
-                            width="14"
-                            height="14"
-                            alt=""
-                            title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslock')}"
-                        />
-                        <span class="visually-hidden"><f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang.xlf:login.error.capslockStatus" /></span>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="form-group t3js-login-yubikey-section" id="t3-login-yubikey-section">
         <div class="input-group">
-            <input type="password" id="t3-yubikey" name="t3-yubikey" value="" aria-label="YubiKey" placeholder="YubiKey" class="form-control input-login t3js-clearable t3js-login-yubikey-field">
+            <input type="password" id="t3-yubikey" name="t3-yubikey" value="" aria-label="YubiKey" autocomplete="one-time-code" placeholder="YubiKey" class="form-control input-login t3js-clearable t3js-login-yubikey-field">
             <div class="input-group-text">
                 <span class="t3yubikey"></span>
             </div>
@@ -94,3 +79,5 @@
         </div>
     </div>
 </f:section>
+
+</html>

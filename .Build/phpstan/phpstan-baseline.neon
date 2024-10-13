@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\View\\\\ViewInterface\\|TYPO3\\\\CMS\\\\Fluid\\\\View\\\\StandaloneView\\:\\:setTemplatePathAndFilename\\(\\)\\.$#"
+			count: 1
+			path: ../../Classes/EventListener/ModifyLoginView.php

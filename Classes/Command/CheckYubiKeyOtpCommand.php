@@ -11,6 +11,7 @@ namespace Derhansen\SfYubikey\Command;
 
 use Derhansen\SfYubikey\Service\YubikeyService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -20,12 +21,23 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class CheckYubiKeyOtpCommand extends Command
 {
-    private YubikeyService $yubikeyService;
-
-    public function __construct(YubikeyService $yubikeyService)
+    public function __construct(private readonly YubikeyService $yubikeyService)
     {
-        $this->yubikeyService = $yubikeyService;
         parent::__construct();
+    }
+
+    /**
+     * Configuring the command options
+     */
+    public function configure(): void
+    {
+        $this
+            ->setDescription('Checks the given OTP against the configured YubiKey endpoints')
+            ->addArgument(
+                'otp',
+                InputArgument::REQUIRED,
+                'The YubiKey OTP'
+            );
     }
 
     /**
