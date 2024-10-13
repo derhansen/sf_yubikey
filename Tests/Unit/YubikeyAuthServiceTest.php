@@ -17,6 +17,8 @@ namespace Derhansen\SfYubikey\Tests\Unit;
 
 use Derhansen\SfYubikey\Authentication\YubikeyAuthService;
 use Derhansen\SfYubikey\Service\YubikeyService;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -123,10 +125,8 @@ class YubikeyAuthServiceTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider authUserDataProvider
-     */
+    #[Test]
+    #[DataProvider('authUserDataProvider')]
     public function authUserReturnsExpectedReturnCode(
         array $userData,
         string $yubikeyOtp,
