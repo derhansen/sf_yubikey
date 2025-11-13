@@ -34,6 +34,10 @@ You can find a detailed documentation in the Documentation folder of the TYPO3 e
 | 1.x     | 6.2 - 7.6  | 5.5 - 7.2 | Support dropped                      |
 | 0.x     | 4.5 - 6.2  | 5.2 - 5.6 | Support dropped                      |
 
+## Reporting a Vulnerability
+
+Please report vulnerabilities to [security@typo3.org](mailto:security@typo3.org).
+
 ## Support and updates
 
 The extension is hosted on GitHub. Please report feedback, bugs and changerequest directly at https://github.com/derhansen/sf_yubikey
