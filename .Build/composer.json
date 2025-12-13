@@ -29,6 +29,7 @@
     "phpstan/extension-installer": "^1.1"
   },
   "config": {
+    "lock": false,
     "allow-plugins": {
       "typo3/class-alias-loader": true,
       "typo3/cms-composer-installers": true,
