@@ -1,19 +1,4 @@
-﻿
-
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
+﻿.. include:: /Includes.rst.txt
 
 Configuration
 -------------
@@ -22,89 +7,69 @@ The extension can be configured in the extension settings from the
 extension manager. Besides the Yubico API Key and the Client ID, there
 are four other settings that can be configured.
 
-.. t3-field-list-table::
- :header-rows: 1
+yubikeyEnableBE
+----------------
 
- - :Property:
-         Property:
+.. confval:: yubikeyEnableBE
 
-   :Date type:
-         Data type:
+   :Type: boolean
+   :Default: True
 
-   :Description:
-         Description:
+   Enable YubiKey authentication for TYPO3 backend users.
 
-   :Default:
-         Default:
 
- - :Property:
-         yubikeyEnableBE
+yubikeyEnableFE
+----------------
 
-   :Date type:
-         boolean
+.. confval:: yubikeyEnableFE
 
-   :Description:
-         Enable YubiKey authentication for TYPO3 backend users
+   :Type: boolean
+   :Default: False
 
-   :Default:
-         True
+   Enable YubiKey authentication for TYPO3 frontend users.
 
- - :Property:
-         yubikeyEnableFE
 
-   :Date type:
-         boolean
+devlog
+------
 
-   :Description:
-         Enable YubiKey authentication for TYPO3 backend users
+.. confval:: devlog
 
-   :Default:
-         False
+   :Type: boolean
+   :Default: False
 
- - :Property:
-         devlog
+   Writes debugging messages to a logfile in ``/typo3temp/var/log/sf_yubikey_{date}_{hash}.log``.
 
-   :Date type:
-         boolean
 
-   :Description:
-         Writes debugging messages to a logfile in /typo3temp/var/log/sf_yubikey_{date}_{hash}.log
+yubikeyClientId
+----------------
 
-   :Default:
-         False
+.. confval:: yubikeyClientId
 
- - :Property:
-         yubikeyClientId
+   :Type: string
+   :Default: Empty
 
-   :Date type:
-         string
+   Your Yubico API Client ID.
 
-   :Description:
-         Your Yubico API Client ID
 
-   :Default:
-         Empty
+yubikeyClientKey
+-----------------
 
- - :Property:
-         yubikeyClientKey
+.. confval:: yubikeyClientKey
 
-   :Date type:
-         string
+   :Type: string
+   :Default: Empty
 
-   :Description:
-         Your Yubico API Client Key
+   Your Yubico API Client Key.
 
-   :Default:
-         Empty
 
- - :Property:
-         yubikeyApiUrl
+yubikeyApiUrl
+--------------
 
-   :Date type:
-         string
+.. confval:: yubikeyApiUrl
 
-   :Description:
-         The Yubico API URL to validate YubiKey OTPs. This may also be an own instance of a YubiKey validation server. Separate multiple endpoints by semicolon.
+   :Type: string
+   :Default: https://api.yubico.com/wsapi/2.0/verify;https://api2.yubico.com/wsapi/2.0/verify;https://api3.yubico.com/wsapi/2.0/verify;https://api4.yubico.com/wsapi/2.0/verify;https://api5.yubico.com/wsapi/2.0/verify
 
-   :Default:
-         https://api.yubico.com/wsapi/2.0/verify;https://api2.yubico.com/wsapi/2.0/verify;https://api3.yubico.com/wsapi/2.0/verify;https://api4.yubico.com/wsapi/2.0/verify;https://api5.yubico.com/wsapi/2.0/verify
+   The Yubico API URL to validate YubiKey OTPs. This may also be your own
+   instance of a YubiKey validation server. Separate multiple endpoints with
+   a semicolon.

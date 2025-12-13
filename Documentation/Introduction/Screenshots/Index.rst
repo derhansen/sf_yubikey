@@ -1,29 +1,9 @@
-﻿.. include:: Images.txt
-
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
+﻿.. include:: /Includes.rst.txt
 
 Screenshots
 ^^^^^^^^^^^
 
-|login-62|
+.. figure:: /Images/yubikey-login.png
+   :alt: YubiKey TYPO3 backend login
 
-The YubiKey enabled TYPO3 backend login (TYPO3 6.2)
-
-|login-73|
-
-The YubiKey enabled TYPO3 backend login (TYPO3 7.3)
-
-
+The YubiKey enabled TYPO3 backend login

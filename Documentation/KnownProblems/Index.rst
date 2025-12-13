@@ -22,7 +22,7 @@ Known problems
 
 If you think you've found a bug, please report it on GitHub.
 
-`https://github.com/derhansen/sf\_yubikey
-<https://github.com/derhansen/sf_yubikey>`_
+https://github.com/derhansen/sf_yubikey
+
 
 

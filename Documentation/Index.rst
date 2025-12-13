@@ -1,18 +1,4 @@
-﻿
-
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
+﻿.. include:: /Includes.rst.txt
 
 =====================================
 YubiKey two-factor OTP authentication
@@ -36,7 +22,7 @@ YubiKey two-factor OTP authentication
 	yubikey, yubico, two-factor, authentication, service
 
 :Copyright:
-	2012 - 2015
+	2012 - 2025
 
 :Author:
 	Torben Hansen

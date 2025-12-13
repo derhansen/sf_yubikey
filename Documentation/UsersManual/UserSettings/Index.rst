@@ -1,27 +1,13 @@
-﻿.. include:: Images.txt
-
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
-
+﻿
 User settings
 ^^^^^^^^^^^^^
 
 To enable the YubiKey two-factor authentication for a user, just edit
 the user in the TYPO3 backend and enable the checkbox as shown below.
 
-|be-user-settings|
+.. figure:: /Images/yubikey-user-settings.png
+   :alt: YubiKey User Settings
+   :class: with-shadow
 
 Next you have to enter the YubiKey ID, which is the unique ID of the YubiKey USB
 key. To get the ID, just insert your YubiKey into a free USB port and press the button

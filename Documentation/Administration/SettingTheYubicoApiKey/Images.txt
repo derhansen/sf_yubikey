@@ -1,6 +1,0 @@
-﻿.. |ext-settings|      image:: ../../Images/yubikey-ext-settings.png
-   :height: 870
-   :width: 584
-.. :align: left
-.. :border: 0
-.. :name: Extension settings

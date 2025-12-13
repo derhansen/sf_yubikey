@@ -1,19 +1,4 @@
-﻿.. include:: Images.txt
-
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
+﻿.. include:: /Includes.rst.txt
 
 Setting the Yubico API Key
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -33,7 +18,9 @@ the Client Key in the extension settings.
 As an alternative, you can also setup your own YubiCloud Service
 as described here: https://developers.yubico.com/OTP/Guides/Self-hosted_OTP_validation.html
 
-|ext-settings|
+.. figure:: /Images/yubikey-extension-settings.png
+   :alt: YubiKey Extension Settings
+   :class: with-shadow
 
 Extension settings for the Yubico API Key
 
