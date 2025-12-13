@@ -26,7 +26,8 @@ You can find a detailed documentation in the Documentation folder of the TYPO3 e
 
 | Version | TYPO3      | PHP       | Support/Development                  |
 |---------|------------|-----------|--------------------------------------|
-| 6.x     | 13.4       | 8.2 - 8.4 | Features, Bugfixes, Security Updates |
+| 7.x     | 14.x       | 8.2 - 8.5 | Features, Bugfixes, Security Updates |
+| 6.x     | 13.4       | 8.2 - 8.5 | Features, Bugfixes, Security Updates |
 | 5.x     | 12.4       | 8.1 - 8.4 | Features, Bugfixes, Security Updates |
 | 4.x     | 11.5       | 7.4 - 8.3 | Bugfixes, Security Updates           |
 | 3.x     | 9.5 - 10.4 | 7.2 - 7.4 | Security Updates                     |
