@@ -30,6 +30,9 @@ validation service.
 After you have obtained your Yubico API Key, enter the Client ID and
 the Client Key in the extension settings.
 
+As an alternative, you can also setup your own YubiCloud Service
+as described here: https://developers.yubico.com/OTP/Guides/Self-hosted_OTP_validation.html
+
 |ext-settings|
 
 Extension settings for the Yubico API Key
