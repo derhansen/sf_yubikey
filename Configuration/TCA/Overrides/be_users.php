@@ -5,7 +5,7 @@ defined('TYPO3') or die();
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 // Prepare new columns for be_users table
-$tempColumns = [
+$newColumns = [
     'tx_sfyubikey_yubikey_enable' => [
         'exclude' => 0,
         'label' => 'LLL:EXT:sf_yubikey/Resources/Private/Language/locallang_db.xlf:users.tx_sfyubikey_yubikey_enable',
@@ -32,7 +32,7 @@ $tempColumns = [
 
 ExtensionManagementUtility::addTCAcolumns(
     'be_users',
-    $tempColumns
+    $newColumns
 );
 ExtensionManagementUtility::addToAllTCAtypes(
     'be_users',

@@ -9,10 +9,3 @@ services:
 
   Derhansen\SfYubikey\Authentication\YubikeyAuthService:
     public: true
-
-  Derhansen\SfYubikey\Command\CheckYubiKeyOtpCommand:
-    tags:
-      - name: 'console.command'
-        description: 'Checks the given OTP against the configured YubiKey endpoints'
-        command: 'sf_yubikey:checkyubikeyotp'
-        schedulable: false

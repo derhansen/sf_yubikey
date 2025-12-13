@@ -15,18 +15,22 @@ use TYPO3\CMS\Backend\LoginProvider\Event\ModifyPageLayoutOnLoginProviderSelecti
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\FluidViewAdapter;
 
 final class ModifyLoginView
 {
     #[AsEventListener('sfyubikey/modify-login-view')]
     public function __invoke(ModifyPageLayoutOnLoginProviderSelectionEvent $event): void
     {
-        $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)
-            ->get('sf_yubikey');
+        $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('sf_yubikey');
         if (isset($extConf['yubikeyEnableBE']) && (bool)$extConf['yubikeyEnableBE']) {
-            $event->getView()->setTemplatePathAndFilename(
-                GeneralUtility::getFileAbsFileName('EXT:sf_yubikey/Resources/Private/Templates/LoginYubikey.html')
-            );
+            $view = $event->getView();
+            if ($view instanceof FluidViewAdapter) {
+                $templatePaths = $view->getRenderingContext()->getTemplatePaths();
+                $templateRootPaths = $templatePaths->getTemplateRootPaths();
+                $templateRootPaths[] = 'EXT:sf_yubikey/Resources/Private/Templates';
+                $templatePaths->setTemplateRootPaths($templateRootPaths);
+            }
         }
     }
 }
