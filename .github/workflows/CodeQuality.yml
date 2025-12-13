@@ -6,13 +6,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        env:
-          - { php: 8.2, coverage: 0}
-
-    env: ${{ matrix.env }}
+        php: ['8.2', '8.2', '8.4']
 
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +16,7 @@ jobs:
       - name: Set up PHP Version
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.env.php }}
+          php-version: ${{ matrix.php }}
           tools: composer:v2
 
       - name: Validate composer.json
