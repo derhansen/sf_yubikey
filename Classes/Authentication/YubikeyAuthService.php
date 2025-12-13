@@ -83,7 +83,7 @@ class YubikeyAuthService extends AbstractAuthenticationService
                         255,
                         3,
                         3,
-                        1,
+                        null,
                         $errorMessage,
                         [
                             $this->authInfo['REMOTE_ADDR'],
@@ -109,7 +109,7 @@ class YubikeyAuthService extends AbstractAuthenticationService
                     255,
                     3,
                     3,
-                    1,
+                    null,
                     $errorMessage,
                     [
                         $this->authInfo['REMOTE_ADDR'],
@@ -125,14 +125,14 @@ class YubikeyAuthService extends AbstractAuthenticationService
     private function isYubikeyCheckEnabled(): bool
     {
         $yubikeyCheckEnabled = false;
-        if (isset($this->extConf['yubikeyEnableBE']) &&
-            (bool)$this->extConf['yubikeyEnableBE'] &&
-            $this->pObj->loginType === 'BE'
+        if (isset($this->extConf['yubikeyEnableBE'])
+            && (bool)$this->extConf['yubikeyEnableBE']
+            && $this->pObj->loginType === 'BE'
         ) {
             $yubikeyCheckEnabled = true;
-        } elseif (isset($this->extConf['yubikeyEnableFE']) &&
-            (bool)$this->extConf['yubikeyEnableFE'] &&
-            $this->pObj->loginType === 'FE'
+        } elseif (isset($this->extConf['yubikeyEnableFE'])
+            && (bool)$this->extConf['yubikeyEnableFE']
+            && $this->pObj->loginType === 'FE'
         ) {
             $yubikeyCheckEnabled = true;
         }

@@ -40,8 +40,8 @@ class YubikeyService
         $this->yubikeyClientKey = trim($extConfig['yubikeyClientKey'] ?? '');
         $this->yubikeyApiUrl = GeneralUtility::trimExplode(';', $extConfig['yubikeyApiUrls'] ?? '', true);
 
-        $this->initialized = $this->yubikeyClientId !== '' && $this->yubikeyClientKey !== '' &&
-            !empty($this->yubikeyApiUrl);
+        $this->initialized = $this->yubikeyClientId !== '' && $this->yubikeyClientKey !== ''
+            && !empty($this->yubikeyApiUrl);
     }
 
     /**
