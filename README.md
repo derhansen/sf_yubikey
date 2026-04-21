@@ -1,7 +1,8 @@
 YubiKey two-factor authentication for TYPO3
 ===========================================
 
-[![Build Status](https://github.com/derhansen/sf_yubikey/workflows/CI/badge.svg?branch=master)](https://github.com/derhansen/sf_yubikey/actions)
+[![Code Quality Checks](https://github.com/derhansen/sf_yubikey/actions/workflows/CodeQuality.yml/badge.svg)](https://github.com/derhansen/sf_yubikey/actions/workflows/CodeQuality.yml)
+[![Unit- and functional tests](https://github.com/derhansen/sf_yubikey/actions/workflows/ci.yml/badge.svg)](https://github.com/derhansen/sf_yubikey/actions/workflows/ci.yml)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 ## What is it?
