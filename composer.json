@@ -1,43 +1,46 @@
 {
-  "name": "derhansen/sf_yubikey",
-  "type": "typo3-cms-extension",
-  "description": "Two-factor authentication with a YubiKey OTP",
-  "homepage": "https://github.com/derhansen/sf_yubikey",
-  "support": {
-    "issues": "https://github.com/derhansen/sf_yubikey/issues"
-  },
-  "authors": [
-    {
-      "name": "Torben Hansen",
-      "email": "torben@derhansen.com",
-      "homepage": "https://www.derhansen.com",
-      "role": "Developer"
-    }
-  ],
-  "keywords": [
-    "TYPO3 CMS",
-    "yubikey",
-    "two-factor authentication"
-  ],
-  "license": [
-    "GPL-2.0-or-later"
-  ],
-  "require": {
-    "typo3/cms-core": "^14.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Derhansen\\SfYubikey\\": "Classes"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Derhansen\\SfYubikey\\": "Tests"
-    }
-  },
-  "extra": {
-    "typo3/cms": {
-      "extension-key": "sf_yubikey"
-    }
-  }
+	"name": "derhansen/sf_yubikey",
+	"type": "typo3-cms-extension",
+	"description": "Two-factor authentication with a YubiKey OTP",
+	"homepage": "https://github.com/derhansen/sf_yubikey",
+	"support": {
+		"issues": "https://github.com/derhansen/sf_yubikey/issues"
+	},
+	"authors": [
+		{
+			"name": "Torben Hansen",
+			"email": "torben@derhansen.com",
+			"homepage": "https://www.derhansen.com",
+			"role": "Developer"
+		}
+	],
+	"keywords": [
+		"TYPO3 CMS",
+		"yubikey",
+		"two-factor authentication"
+	],
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"require": {
+		"typo3/cms-core": "^14.3"
+	},
+	"autoload": {
+		"psr-4": {
+			"Derhansen\\SfYubikey\\": "Classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Derhansen\\SfYubikey\\": "Tests"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "sf_yubikey",
+			"Package": {
+				"providesPackages": {}
+			}
+		}
+	}
 }
