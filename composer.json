@@ -38,6 +38,7 @@
 	"extra": {
 		"typo3/cms": {
 			"extension-key": "sf_yubikey",
+			"version": "7.0.2",
 			"Package": {
 				"providesPackages": []
 			}
