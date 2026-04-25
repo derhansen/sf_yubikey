@@ -1,7 +1,7 @@
 {
 	"name": "derhansen/sf_yubikey",
 	"type": "typo3-cms-extension",
-	"description": "Two-factor authentication with a YubiKey OTP",
+	"description": "YubiKey two-factor OTP authentication - An authentication service for TYPO3 which extends the backend/frontend login by YubiKey OTP two-factor authentication.",
 	"homepage": "https://github.com/derhansen/sf_yubikey",
 	"support": {
 		"issues": "https://github.com/derhansen/sf_yubikey/issues"
@@ -39,7 +39,7 @@
 		"typo3/cms": {
 			"extension-key": "sf_yubikey",
 			"Package": {
-				"providesPackages": {}
+				"providesPackages": []
 			}
 		}
 	}
